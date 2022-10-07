@@ -13,6 +13,8 @@ class Trait
 
   #metodos de instancia
   def initialize(un_hash_de_metodos, un_ignorar_symbols = [])
+    #@}
+    # trait_ancestors = nil
     @hash_de_metodos = un_hash_de_metodos
     @ignorar_symbols = un_ignorar_symbols
   end
@@ -27,6 +29,7 @@ class Trait
   end
 
   def restar(*un_symbol_method)
+    #ojito que estoy pasando el hash y no una copia
     Trait.new(@hash_de_metodos, un_symbol_method)
   end
 
