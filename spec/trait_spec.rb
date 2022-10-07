@@ -161,4 +161,6 @@ describe 'trait' do
     expect(instancia.m1).to eq("soy una clase")
     expect(instancia.m2).to eq("m2")
   end
+
 end
+

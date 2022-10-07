@@ -14,15 +14,15 @@ class Trait
   #metodos de instancia
   def initialize(un_hash_de_metodos, un_ignorar_symbols = [])
     @hash_de_metodos = un_hash_de_metodos
-    @array_ignorar_symbols = un_ignorar_symbols
+    #@array_ignorar_symbols = un_ignorar_symbols
   end
 
   def inyectarse_en(una_clase)
     comprobar_conflicto_en(una_clase)
       @hash_de_metodos.each{|symbol, method|
-        unless @array_ignorar_symbols.include?(symbol)
+        #unless @array_ignorar_symbols.include?(symbol)
           una_clase.define_method(symbol, method)
-        end
+        #end
         }
   end
 
@@ -47,14 +47,14 @@ class Trait
   end
 
   def metodos_disponibles
-    @hash_de_metodos.keys - @array_ignorar_symbols
+    @hash_de_metodos.keys #- @array_ignorar_symbols
   end
 
   private
   def comprobar_conflicto_en(una_clase)
     symbol_methods_class = una_clase.instance_methods
     symbol_methods_trait = @hash_de_metodos.keys
-    symbol_methods_conflict = symbol_methods_class.intersection(symbol_methods_trait) - @array_ignorar_symbols
+    symbol_methods_conflict = symbol_methods_class.intersection(symbol_methods_trait) #- @array_ignorar_symbols
     unless symbol_methods_conflict.empty?
       raise("Hay conflicto entre el trait y la clase , con los siguientes metodos #{symbol_methods_conflict}")
     end
@@ -81,6 +81,10 @@ class TraitDisminuido
   def inyectarse_en(una_clase)
     @trait_original.inyectarse_de_forma_reducida(una_clase, @array_ignorar_simbolos)
   end
+
+  def metodos_disponibles
+    @trait_original.metodos_disponibles - @array_ignorar_symbols
+  end
 end
 
 class TraitCompuesto
@@ -95,13 +99,22 @@ class TraitCompuesto
   end
 
   def restar(a_symbol)
-
-    @trait_a = @trait_a.restar(a_symbol)
-    @trait_b = @trait_b.restar(a_symbol)
+    metodos = @trait_a.metodos_disponibles
+    if metodos.include?(a_symbol)
+      @trait_a = @trait_a.restar(a_symbol)
+    end
+    metodos = @trait_b.metodos_disponibles
+    if metodos.include?(a_symbol)
+      @trait_b = @trait_b.restar(a_symbol)
+    end
     self
   end
 
   def sumar(un_trait)
     TraitCompuesto.new(self, un_trait)
+  end
+
+  def metodos_disponibles
+    @trait_a.metodos_dispobibles + @trait_b.metodos_disponibles
   end
 end
