@@ -9,13 +9,35 @@ class Trait
     new(hash_de_metodos)
   end
 
+
+
   #metodos de instancia
-  def initialize(un_hash_de_metodos)
+  def initialize(un_hash_de_metodos, un_ignorar_symbols = [])
     @hash_de_metodos = un_hash_de_metodos
+    @ignorar_symbols = un_ignorar_symbols
   end
 
   def inyectarse_en(una_clase)
-    @hash_de_metodos.each{|symbol, method| una_clase.define_method(symbol, method)}
+    comprobar_conflicto_en(una_clase)
+      @hash_de_metodos.each{|symbol, method|
+        unless @ignorar_symbols.include?(symbol)
+          una_clase.define_method(symbol, method)
+        end
+        }
+  end
+
+  def restar(*un_symbol_method)
+    Trait.new(@hash_de_metodos, un_symbol_method)
+  end
+
+  private
+  def comprobar_conflicto_en(una_clase)
+    symbol_methods_class = una_clase.instance_methods
+    symbol_methods_trait = @hash_de_metodos.keys
+    symbol_methods_conflict = symbol_methods_class.intersection(symbol_methods_trait) - @ignorar_symbols
+    unless symbol_methods_conflict.empty?
+      raise("Hay conflicto entre el trait y la clase , con los siguientes metodos #{symbol_methods_conflict}")
+    end
   end
 
 end
