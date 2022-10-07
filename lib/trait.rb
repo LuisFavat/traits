@@ -10,19 +10,16 @@ class Trait
   end
 
 
-
   #metodos de instancia
-  def initialize(un_hash_de_metodos, un_ignorar_symbols = [])
+  def initialize(un_hash_de_metodos)
     @hash_de_metodos = un_hash_de_metodos
-    #@array_ignorar_symbols = un_ignorar_symbols
+    @mensajes_requeridos = []
   end
 
   def inyectarse_en(una_clase)
-    comprobar_conflicto_en(una_clase)
-      @hash_de_metodos.each{|symbol, method|
-        #unless @array_ignorar_symbols.include?(symbol)
-          una_clase.define_method(symbol, method)
-        #end
+    mensajes_a_inyectar = @hash_de_metodos.keys - mensajes_en_comun(una_clase)
+    mensajes_a_inyectar.each{ |mensaje|
+          una_clase.define_method(mensaje, @hash_de_metodos[mensaje])
         }
   end
 
@@ -36,8 +33,6 @@ class Trait
   end
 
 
-
-
   def restar(un_symbol_method)
     TraitDisminuido.new(self, un_symbol_method)
   end
@@ -47,17 +42,26 @@ class Trait
   end
 
   def metodos_disponibles
-    @hash_de_metodos.keys #- @array_ignorar_symbols
+    @hash_de_metodos.keys
+  end
+
+  def requiere(un_mensaje)
+    @mensajes_requeridos << un_mensaje
+  end
+
+  def tiene_requeridos?
+    @mensajes_requeridos.empty?
+  end
+
+  def mensajes_requeridos
+    @mensajes_requeridos.clone
   end
 
   private
-  def comprobar_conflicto_en(una_clase)
+  def mensajes_en_comun(una_clase)
     symbol_methods_class = una_clase.instance_methods
     symbol_methods_trait = @hash_de_metodos.keys
-    symbol_methods_conflict = symbol_methods_class.intersection(symbol_methods_trait) #- @array_ignorar_symbols
-    unless symbol_methods_conflict.empty?
-      raise("Hay conflicto entre el trait y la clase , con los siguientes metodos #{symbol_methods_conflict}")
-    end
+    symbol_methods_class.intersection(symbol_methods_trait)
   end
 
   def comprobar_conflicto_reducido(una_clase, simbolos_a_ignorar)
@@ -74,8 +78,8 @@ end
 class TraitDisminuido
   def initialize(un_trait, un_ingnorar_simbolos)
     @trait_original = un_trait
-    @array_ignorar_simbolos = []
-    @array_ignorar_simbolos << un_ingnorar_simbolos
+    @array_ignorar_simbolos = [un_ingnorar_simbolos].flatten
+
   end
 
   def inyectarse_en(una_clase)
@@ -88,9 +92,10 @@ class TraitDisminuido
 end
 
 class TraitCompuesto
-  def initialize(un_trait_a, un_trait_b)
+  def initialize(un_trait_a, un_trait_b, mensajes_requeridos)
     @trait_a = un_trait_a
     @trait_b = un_trait_b
+    @mensajes_requeridos = mensajes_requeridos
   end
 
   def inyectarse_en(una_clase)
@@ -111,10 +116,19 @@ class TraitCompuesto
   end
 
   def sumar(un_trait)
-    TraitCompuesto.new(self, un_trait)
+    mensajes_requeridos = @mensajes_requeridos.union(un_trait.mensajes_requeridos)
+    TraitCompuesto.new(self, un_trait, mensajes_requeridos)
   end
 
   def metodos_disponibles
     @trait_a.metodos_dispobibles + @trait_b.metodos_disponibles
+  end
+
+  def requiere(un_mensaje)
+    @mensajes_requeridos << un_mensaje
+  end
+
+  def tiene_requeridos?
+    @mensajes_requeridos.empty?
   end
 end

@@ -3,164 +3,211 @@ require 'rspec'
 require 'trait'
 
 describe 'trait' do
-  it 'Se crea un trait en una clase sin conflictos, se le puede mandar los mensajes definidos por el trair a la instancia' do
-    trait = Trait.definir_metodos do
-      def m1
-        "hola trait"
+  describe 'algo' do
+    it 'Se aplica un trait a una clase y sus intancias responden a los mensajes definidos por el trait' do
+      un_trait = Trait.definir_metodos do
+        def m1
+          "hola trait"
+        end
       end
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      un_trait.inyectarse_en(una_clase)
+
+      expect(instancia.m1).to eq("hola trait")
     end
 
-    una_clase = Class.new
-    instancia = una_clase.new
+    it 'Se aplica un trait a una clase con un mensaje en comun y prevalece el comportamiento definido de la clase' do
+      un_trait = Trait.definir_metodos do
+        def m1
+          "hola trait"
+        end
+      end
 
-    trait.inyectarse_en(una_clase)
+      una_clase = Class.new do
+        def m1
+          "hola, soy una_clase"
+        end
+      end
+      instancia = una_clase.new
 
-    expect(instancia.m1).to eq("hola trait")
+      un_trait.inyectarse_en(una_clase)
+
+      expect(instancia.m1).to eq("hola, soy una_clase")
+    end
   end
 
-  it 'Se inyecta un trait en una clase con conflicto, se lanza una excepcion' do
-    trait = Trait.definir_metodos do
-      def m1
-        "hola trait"
+  describe 'Algebra' do
+    it 'Se resta un mensaje a un trait y las instancias no responden al mismo' do
+      un_trait = Trait.definir_metodos do
+        def m1
+          "hola trait"
+        end
+
+        def m2
+          "hola mundo"
+        end
       end
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      trait_disminuido = un_trait.restar(:m2)
+      trait_disminuido.inyectarse_en(una_clase)
+
+      expect(instancia.m1).to eq("hola trait")
+      expect(instancia.respond_to?(:m2)).to be(false)
     end
 
-    una_clase = Class.new do
-      def m1
-        "hola, soy una_clase"
+    it 'Se componen varios traits, se aplican a una clase y sus instancias entienden los mensajes definidos por ambos' do
+      trait_1 = Trait.definir_metodos do
+        def m1
+          "m1"
+        end
       end
-    end
-    instancia = una_clase.new
+      trait_2 = Trait.definir_metodos do
+        def m2
+          "m2"
+        end
+      end
+      trait_3 = Trait.definir_metodos do
+        def m3
+          "m3"
+        end
+      end
 
-    expect{trait.inyectarse_en(una_clase)}.to raise_error("Hay conflicto entre el trait y la clase , con los siguientes metodos [:m1]")
+      trait_compuesto = (trait_1.sumar(trait_2)).sumar(trait_3)
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      trait_compuesto.inyectarse_en(una_clase)
+
+      expect(instancia.m1).to eq("m1")
+      expect(instancia.m2).to eq("m2")
+      expect(instancia.m3).to eq("m3")
+    end
+
+    it 'Se componen varios traits, se aplican a una clase y sus instancias entienden los mensajes definidos por ambos' do
+      trait_1 = Trait.definir_metodos do
+        def m1
+          "m1"
+        end
+      end
+      trait_2 = Trait.definir_metodos do
+        def m2
+          "m2"
+        end
+      end
+      trait_3 = Trait.definir_metodos do
+        def m3
+          "m3"
+        end
+      end
+
+      trait_compuesto = (trait_1.sumar(trait_2)).sumar(trait_3)
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      trait_compuesto.inyectarse_en(una_clase)
+
+      expect(instancia.m1).to eq("m1")
+      expect(instancia.m2).to eq("m2")
+      expect(instancia.m3).to eq("m3")
+    end
+  end
+  describe 'requeridos' do
+    it 'klsdjfgklj' do
+      un_trait = Trait.definir_metodos do
+        def m1
+          self.m2
+        end
+      end
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      un_trait.requiere(:m2)
+      un_trait.inyectarse_en(una_clase)
+
+
+      expect{instancia.m1}.to raise_error( NoMethodError )
+    end
+
+    it 'klsdjfgklgldñfkgñldkj' do
+      un_trait = Trait.definir_metodos do
+        def m1
+          self.m2
+        end
+      end
+      una_clase = Class.new do
+        def m2
+          "m2"
+        end
+      end
+
+      instancia = una_clase.new
+
+      un_trait.requiere(:m2)
+      un_trait.inyectarse_en(una_clase)
+
+      expect(instancia.m1).to eq("m2")
+    end
+
+    it 'klsdjfgklgldñfkgñldkjksjflksjdf' do
+      un_trait_1 = Trait.definir_metodos do
+        def m1
+          self.m2
+        end
+      end
+      un_trait_2 = Trait.definir_metodos do
+        def m2
+          "m2"
+        end
+      end
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      un_trait_1.requiere(:m2)
+      trait_combinado =  un_trait_1.sumar(un_trait_2)
+      trait_combinado.inyectarse_en(una_clase)
+
+      expect(instancia.m1).to eq("m2")
+      expect(trait_combinado.tiene_requeridos?).to be(false)
+    end
+
+    it 'klsdjfgklgldñfkgñldkjk587467sjflksjdf' do
+      un_trait_1 = Trait.definir_metodos do
+        def m1
+          self.m2
+        end
+      end
+      un_trait_2 = Trait.definir_metodos do
+        def m3
+          "m3"
+        end
+      end
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      un_trait_1.requiere(:m2)
+      trait_combinado =  un_trait_1.sumar(un_trait_2)
+      trait_combinado.inyectarse_en(una_clase)
+
+      expect{instancia.m1}.to raise_error(NoMethodError)
+      expect(trait_combinado.tiene_requeridos?).to be(true)
+    end
   end
 
-  it 'Se tiene un trait y una clase con conflictos, se resuelve el conflicto sacando los metodos conflictivos' do
-    trait_con_conflicto = Trait.definir_metodos do
-      def m1
-        "hola trait"
-      end
-    end
+  it 'klsdjfgklgldñfkgñldkfdgdk587467sjflksjdf' do
 
-    una_clase = Class.new do
-      def m1
-        "hola, soy una_clase"
-      end
 
-      def m2
-        "hola mundo"
-      end
-    end
-    instancia = una_clase.new
-
-    trait_sin_conflicto = trait_con_conflicto.restar(:m1)
-    trait_sin_conflicto.inyectarse_en(una_clase)
-
-    expect(instancia.m1).to eq("hola, soy una_clase")
-    expect(instancia.m2).to eq("hola mundo")
   end
 
-  it 'Se inyecta la composicion de dos traits a una clase, la instancia entiende los mensajes definidos por ambos traits' do
-    trait_1 = Trait.definir_metodos do
-      def m1
-        "hola mundo"
-      end
-    end
-    trait_2 = Trait.definir_metodos do
-      def m2
-        "chau mundo"
-      end
-    end
-
-    trait_compuesto = trait_1.sumar(trait_2)
-
-    una_clase = Class.new
-    instancia = una_clase.new
-
-    trait_compuesto.inyectarse_en(una_clase)
-
-    expect(instancia.m1).to eq("hola mundo")
-    expect(instancia.m2).to eq("chau mundo")
-  end
-
-  it 'Se inyecta la composicion de dos traits a una clase con conflicto, se lanza una excepcion' do
-    trait_1 = Trait.definir_metodos do
-      def m1
-        "hola mundo"
-      end
-    end
-    trait_2 = Trait.definir_metodos do
-      def m2
-        "chau mundo"
-      end
-    end
-
-    trait_compuesto = trait_1.sumar(trait_2)
-
-    una_clase = Class.new do
-      def m1
-        "soy una clase"
-      end
-    end
-
-    expect{trait_compuesto.inyectarse_en(una_clase)}.to raise_error("Hay conflicto entre el trait y la clase , con los siguientes metodos [:m1]")
-  end
-
-  it 'Se componen trait varios traits a una clase sin conflicto, la instancia entiende todos los mensaje definidos por los traits' do
-    #este test me dice a mi que no esta tan bueno abstraerse de la implementacion, sino este test no existiria y sin embargo es super util
-    trait_1 = Trait.definir_metodos do
-      def m1
-        "m1"
-      end
-    end
-    trait_2 = Trait.definir_metodos do
-      def m2
-        "m2"
-      end
-    end
-    trait_3 = Trait.definir_metodos do
-      def m3
-        "m3"
-      end
-    end
-
-    trait_compuesto = (trait_1.sumar(trait_2)).sumar(trait_3)
-
-    una_clase = Class.new
-    instancia = una_clase.new
-
-    trait_compuesto.inyectarse_en(una_clase)
-
-    expect(instancia.m1).to eq("m1")
-    expect(instancia.m2).to eq("m2")
-    expect(instancia.m3).to eq("m3")
-  end
-  it 'Se componen trait con una clase en conflicto, se resta el metodo conflictivo, la instancia entiende todos los mensajes definidos por el trait' do
-
-    trait_1 = Trait.definir_metodos do
-      def m1
-        "m1"
-      end
-    end
-    trait_2 = Trait.definir_metodos do
-      def m2
-        "m2"
-      end
-    end
-
-    una_clase = Class.new do
-      def m1
-        "soy una clase"
-      end
-    end
-    instancia = una_clase.new
-
-    trait_compuesto = (trait_1.sumar(trait_2)).restar(:m1)
-    trait_compuesto.inyectarse_en(una_clase)
-
-    expect(instancia.m1).to eq("soy una clase")
-    expect(instancia.m2).to eq("m2")
-  end
 
 end
 
