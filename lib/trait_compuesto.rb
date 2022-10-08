@@ -24,5 +24,9 @@ class TraitCompuesto < TraitAbstracto
   def tiene_requeridos?
     @trait_a.tiene_requeridos?  || @trait_b.tiene_requeridos?
   end
+
+  def mensajes_ignorados
+    @trait_a.mensajes_ignorados + (@trait_b..mensajes_ignorados.union)
+  end
 end
 

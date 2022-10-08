@@ -5,7 +5,7 @@ require 'trait_compuesto'
 class Trait < TraitAbstracto
 
   # metodos de clase
-  def self.definir_metodos(&bloque_de_metodos)
+  def self.definir_comportamiento(&bloque_de_metodos)
 
     modulo_con_metodos = Module.new {
 
@@ -59,6 +59,10 @@ class Trait < TraitAbstracto
 
   def tiene_requeridos?
     !@mensajes_requeridos.empty?
+  end
+
+  def mensajes_ignorados
+    []
   end
 
   private

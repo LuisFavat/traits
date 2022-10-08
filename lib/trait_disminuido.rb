@@ -5,7 +5,7 @@ class TraitDisminuido < TraitAbstracto
   end
 
   def aplicarse_en(una_clase)
-    @trait.aplicarse_en(una_clase, @mensajes_ignorados)
+    @trait.aplicarse_en(una_clase, mensajes_ignorados)
   end
 
   def mensajes_disponibles
@@ -22,6 +22,10 @@ class TraitDisminuido < TraitAbstracto
 
   def tiene_requeridos?
     @trait.tiene_requeridos?
+  end
+
+  def mensajes_ignorados
+    @trait.mensajes_ignorados << @mensajes_ignorados
   end
 end
 
