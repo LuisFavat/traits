@@ -211,6 +211,11 @@ describe 'trait' do
       # Verificacion
       expect(trait_combinado.tiene_requeridos?).to be(true)
     end
+
+    it 'should ' do
+
+
+    end
   end
 end
 

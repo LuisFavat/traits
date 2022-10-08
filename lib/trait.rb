@@ -3,6 +3,7 @@ require 'trait_disminuido'
 require 'trait_compuesto'
 
 class Trait < TraitAbstracto
+
   # metodos de clase
   def self.definir_metodos(&bloque_de_metodos)
 
