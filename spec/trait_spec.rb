@@ -119,8 +119,8 @@ describe 'trait' do
       expect(instancia.m3).to eq("m3")
     end
   end
-  describe 'requeridos' do
-    it 'klsdjfgklj' do
+  describe 'mensajes requeridos' do
+    it 'Al aplicar un trait con requerimientos a una clase que no satisface los requerimientos se levanta una excepcion' do
       un_trait = Trait.definir_metodos do
         requiere(:m2)
         def m1
@@ -128,15 +128,12 @@ describe 'trait' do
         end
       end
       una_clase = Class.new
-      instancia = una_clase.new
-
-
 
       #esto esta mal en la otra branch
       expect{un_trait.aplicarse_en(una_clase)}.to raise_error( "Faltan los siguientes metoddos requeridos: [:m2]" )
     end
 
-    it 'klsdjfgklgldñfkgñldkj' do
+    it 'Al aplicar un trait con requerimientos a una clase que satisface los requerimientos, se aplica correctamente el trait' do
       un_trait = Trait.definir_metodos do
         requiere(:m2)
         def m1
@@ -152,12 +149,13 @@ describe 'trait' do
       instancia = una_clase.new
       un_trait.aplicarse_en(una_clase)
 
-      puts una_clase.instance_methods(false)
       expect(instancia.m1).to eq("m2")
     end
 
-    it 'klsdjfgklgldñfkgñldkjksjflksjdf' do
+    it 'Al combinar traits con requerimientos y traits que satisfacen dichos requerimientos, el nuevo trait no tiene requerimientos' do
+      #Preparacion
       un_trait_1 = Trait.definir_metodos do
+        requiere(:m2)
         def m1
           self.m2
         end
@@ -167,20 +165,17 @@ describe 'trait' do
           "m2"
         end
       end
-
-      una_clase = Class.new
-      instancia = una_clase.new
-
-      un_trait_1.requiere(:m2)
-      trait_combinado =  un_trait_1.sumar(un_trait_2)
+      #Ejercitacion
+      trait_combinado = un_trait_1.sumar(un_trait_2)
       trait_combinado.aplicarse_en(una_clase)
 
-      expect(instancia.m1).to eq("m2")
+      #Verificacion
       expect(trait_combinado.tiene_requeridos?).to be(false)
     end
 
-    it 'klsdjfgklgldñfkgñldkjk587467sjflksjdf' do
+    it 'Al combinar traits con requerimientos con otros que no satisfacen dichos requerimientos, el trait resultante tiene requerimietos' do
       un_trait_1 = Trait.definir_metodos do
+        requiere(:m2)
         def m1
           self.m2
         end
@@ -194,11 +189,9 @@ describe 'trait' do
       una_clase = Class.new
       instancia = una_clase.new
 
-      un_trait_1.requiere(:m2)
-      trait_combinado =  un_trait_1.sumar(un_trait_2)
+      trait_combinado = un_trait_1.sumar(un_trait_2)
       trait_combinado.aplicarse_en(una_clase)
 
-      expect{instancia.m1}.to raise_error(NoMethodError)
       expect(trait_combinado.tiene_requeridos?).to be(true)
     end
   end
