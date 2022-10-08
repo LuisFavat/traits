@@ -298,15 +298,34 @@ describe 'trait' do
         end
       end
 
-      trait_con_alias = un_trait << {otro_mensaje: :mensaje_dos}
-
       una_clase = Class.new
-
-      trait_con_alias.aplicarse_en una_clase
       una_instancia = una_clase.new
+
+
+      trait_con_alias = un_trait << {otro_mensaje: :mensaje_dos}
+      trait_con_alias.aplicarse_en una_clase
 
       expect(una_instancia.otro_mensaje).to eq("este es otro mensaje")
       expect(una_instancia.mensaje_dos).to eq("este es otro mensaje")
+    end
+
+    it "Se define un alias, como el trait original no se modifica y no se guarda el trait con alias, la aplicacion del trait original no surte efecto en el alias" do
+
+      un_trait = Trait.definir_comportamiento do
+        def mensaje
+          "este es mensaje"
+        end
+      end
+
+      una_clase = Class.new
+      una_instancia = una_clase.new
+
+
+      un_trait << {mensaje: :otro_mensaje}
+      un_trait.aplicarse_en una_clase
+
+      expect(una_instancia.respond_to?(:mensaje)).to be(true)
+      expect(una_instancia.respond_to?(:otro_mensaje)).to be(false)
     end
 
   end

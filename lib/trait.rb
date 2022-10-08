@@ -8,7 +8,6 @@ class Trait
     modulo_con_mensajes.instance_methods(false).each do |mensaje|
       diccionario_de_mensajes[mensaje] = modulo_con_mensajes.instance_method(mensaje)
     end
-
     new(diccionario_de_mensajes)
   end
 
@@ -62,10 +61,11 @@ class Trait
   end
 
   def <<(mensaje_alias)
+    otro_diccionario = @diccionario_de_mensajes.clone
     mensaje_alias.each { |mensaje, alias_mensaje|
-      @diccionario_de_mensajes[alias_mensaje] = @diccionario_de_mensajes[mensaje]
+      otro_diccionario[alias_mensaje] = otro_diccionario[mensaje]
     }
-    self
+    Trait.new(otro_diccionario)
   end
 
   private
