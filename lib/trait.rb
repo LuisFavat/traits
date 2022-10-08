@@ -57,7 +57,7 @@ class Trait < TraitAbstracto
   end
 
   def tiene_requeridos?
-    @mensajes_requeridos.empty?
+    !@mensajes_requeridos.empty?
   end
 
   private
