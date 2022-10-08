@@ -14,7 +14,7 @@ describe 'trait' do
       una_clase = Class.new
       instancia = una_clase.new
 
-      un_trait.inyectarse_en(una_clase)
+      un_trait.aplicarse_en(una_clase)
 
       expect(instancia.m1).to eq("hola trait")
     end
@@ -33,7 +33,7 @@ describe 'trait' do
       end
       instancia = una_clase.new
 
-      un_trait.inyectarse_en(una_clase)
+      un_trait.aplicarse_en(una_clase)
 
       expect(instancia.m1).to eq("hola, soy una_clase")
     end
@@ -55,7 +55,7 @@ describe 'trait' do
       instancia = una_clase.new
 
       trait_disminuido = un_trait.restar(:m2)
-      trait_disminuido.inyectarse_en(una_clase)
+      trait_disminuido.aplicarse_en(una_clase)
 
       expect(instancia.m1).to eq("hola trait")
       expect(instancia.respond_to?(:m2)).to be(false)
@@ -83,7 +83,7 @@ describe 'trait' do
       una_clase = Class.new
       instancia = una_clase.new
 
-      trait_compuesto.inyectarse_en(una_clase)
+      trait_compuesto.aplicarse_en(una_clase)
 
       expect(instancia.m1).to eq("m1")
       expect(instancia.m2).to eq("m2")
@@ -112,7 +112,7 @@ describe 'trait' do
       una_clase = Class.new
       instancia = una_clase.new
 
-      trait_compuesto.inyectarse_en(una_clase)
+      trait_compuesto.aplicarse_en(una_clase)
 
       expect(instancia.m1).to eq("m1")
       expect(instancia.m2).to eq("m2")
@@ -122,6 +122,7 @@ describe 'trait' do
   describe 'requeridos' do
     it 'klsdjfgklj' do
       un_trait = Trait.definir_metodos do
+        requiere(:m2)
         def m1
           self.m2
         end
@@ -129,15 +130,15 @@ describe 'trait' do
       una_clase = Class.new
       instancia = una_clase.new
 
-      un_trait.requiere(:m2)
-      un_trait.inyectarse_en(una_clase)
 
 
-      expect{instancia.m1}.to raise_error( NoMethodError )
+      #esto esta mal en la otra branch
+      expect{un_trait.aplicarse_en(una_clase)}.to raise_error( "Faltan los siguientes metoddos requeridos: [:m2]" )
     end
 
     it 'klsdjfgklgldñfkgñldkj' do
       un_trait = Trait.definir_metodos do
+        requiere(:m2)
         def m1
           self.m2
         end
@@ -149,10 +150,9 @@ describe 'trait' do
       end
 
       instancia = una_clase.new
+      un_trait.aplicarse_en(una_clase)
 
-      un_trait.requiere(:m2)
-      un_trait.inyectarse_en(una_clase)
-
+      puts una_clase.instance_methods(false)
       expect(instancia.m1).to eq("m2")
     end
 
@@ -173,7 +173,7 @@ describe 'trait' do
 
       un_trait_1.requiere(:m2)
       trait_combinado =  un_trait_1.sumar(un_trait_2)
-      trait_combinado.inyectarse_en(una_clase)
+      trait_combinado.aplicarse_en(una_clase)
 
       expect(instancia.m1).to eq("m2")
       expect(trait_combinado.tiene_requeridos?).to be(false)
@@ -196,17 +196,18 @@ describe 'trait' do
 
       un_trait_1.requiere(:m2)
       trait_combinado =  un_trait_1.sumar(un_trait_2)
-      trait_combinado.inyectarse_en(una_clase)
+      trait_combinado.aplicarse_en(una_clase)
 
       expect{instancia.m1}.to raise_error(NoMethodError)
       expect(trait_combinado.tiene_requeridos?).to be(true)
     end
   end
 
-  it 'klsdjfgklgldñfkgñldkfdgdk587467sjflksjdf' do
+  describe "otros test" do
 
 
   end
+
 
 
 end
