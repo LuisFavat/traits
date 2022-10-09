@@ -1,5 +1,6 @@
 class TraitDisminuido < TraitAbstracto
   def initialize(un_trait, *un_ingnorar_simbolos)
+    super()
     @trait = un_trait
     @mensajes_ignorados = [un_ingnorar_simbolos].flatten
   end
@@ -12,20 +13,20 @@ class TraitDisminuido < TraitAbstracto
     @trait.mensajes_requeridos
   end
 
-  def metodos
-    @trait.metodos
-  end
-
-  def metodo_llamado(unSelector)
-    @trait.metodo_llamado(unSelector)
-  end
-
   def tiene_requeridos?
     @trait.tiene_requeridos?
   end
 
   def mensajes_ignorados
     @trait.mensajes_ignorados + @mensajes_ignorados
+  end
+
+  def metodos
+    @trait.metodos
+  end
+
+  def metodo(un_mensaje)
+    @trait.metodo(un_mensaje)
   end
 end
 

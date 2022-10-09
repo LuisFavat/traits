@@ -31,6 +31,7 @@ class Trait < TraitAbstracto
   
   # metodos de instancia
   def initialize(unos_metodos, unos_mensajes_requeridos = [])
+    super()
     @hash_de_metodos = unos_metodos
     @mensajes_requeridos = unos_mensajes_requeridos
   end
@@ -38,9 +39,7 @@ class Trait < TraitAbstracto
   def mensajes_disponibles
     @hash_de_metodos.keys.to_set
   end
-  def metodo_llamado(unSelector)
-    @hash_de_metodos[unSelector]
-  end
+
   def mensajes_requeridos
     @mensajes_requeridos.clone.to_set
   end
@@ -49,13 +48,19 @@ class Trait < TraitAbstracto
     !@mensajes_requeridos.empty?
   end
 
+  def mensajes_ignorados
+    []
+  end
+
   def metodos
     @hash_de_metodos.values.to_set
   end
 
-  def mensajes_ignorados
-    []
+  def metodo(un_mensaje)
+    @hash_de_metodos[un_mensaje]
   end
+
+
 
   private
 
@@ -76,5 +81,3 @@ class Trait < TraitAbstracto
   end
 
 end
-
-
