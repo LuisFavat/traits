@@ -22,7 +22,7 @@ class TraitCompuesto < TraitAbstracto
   end
 
   def tiene_requeridos?
-    @trait_a.tiene_requeridos?  || @trait_b.tiene_requeridos?
+    !(mensajes_requeridos - mensajes_disponibles).empty?
   end
 
   def mensajes_ignorados

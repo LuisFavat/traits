@@ -203,6 +203,7 @@ describe 'trait' do
     it 'Al aplicarse un trait con requeridos no satisfechos y llamar al mensaje lanza una excepcion' do
       un_trait = Trait.definir_comportamiento do
         requiere :m2
+
         def m1
           self.m2
         end
@@ -217,6 +218,8 @@ describe 'trait' do
 
     it 'Al aplicarse un trait con requeridos a una clase que define el mensaje se invoca correctamente por la instancia' do
       un_trait = Trait.definir_comportamiento do
+        requiere :m2
+
         def m1
           self.m2
         end
@@ -229,7 +232,6 @@ describe 'trait' do
 
       instancia = una_clase.new
 
-      un_trait.requiere(:m2)
       un_trait.aplicarse_en(una_clase)
 
       expect(instancia.m1).to eq("m2")
@@ -237,6 +239,8 @@ describe 'trait' do
 
     it 'Al combinarse un trait con requeridos con otro que define el mensaje el resultante no conserva el requerimiento' do
       un_trait_1 = Trait.definir_comportamiento do
+        requiere :m2
+
         def m1
           self.m2
         end
@@ -251,7 +255,6 @@ describe 'trait' do
       una_clase = Class.new
       instancia = una_clase.new
 
-      un_trait_1.requiere(:m2)
       trait_combinado =  un_trait_1 + un_trait_2
       trait_combinado.aplicarse_en(una_clase)
 
@@ -261,6 +264,8 @@ describe 'trait' do
 
     it 'Al combinarse un trait con requeridos no satisfechos el resultante los conserva' do
       un_trait_1 = Trait.definir_comportamiento do
+        requiere :m2
+
         def m1
           self.m2
         end
@@ -274,7 +279,6 @@ describe 'trait' do
       una_clase = Class.new
       instancia = una_clase.new
 
-      un_trait_1.requiere(:m2)
       trait_combinado =  un_trait_1 + un_trait_2
       trait_combinado.aplicarse_en(una_clase)
 
