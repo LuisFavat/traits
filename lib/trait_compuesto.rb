@@ -13,8 +13,8 @@ class TraitCompuesto < TraitAbstracto
     @trait_a.mensajes_disponibles + @trait_b.mensajes_disponibles
   end
 
-  def mensajes_aplicables
-    @trait_a.mensajes_aplicables + @trait_b.mensajes_aplicables
+  def metodos
+    @trait_a.metodos + @trait_b.metodos
   end
 
   def mensajes_requeridos

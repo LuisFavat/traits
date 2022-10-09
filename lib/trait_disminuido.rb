@@ -4,20 +4,20 @@ class TraitDisminuido < TraitAbstracto
     @mensajes_ignorados = [un_ingnorar_simbolos].flatten
   end
 
-  def aplicarse_en(una_clase)
-    @trait.aplicarse_en(una_clase, mensajes_ignorados)
-  end
-
   def mensajes_disponibles
-    @trait.mensajes_disponibles
-  end
-
-  def mensajes_aplicables
-    @trait.mensajes_aplicables - @array_ignorar_symbols
+    @trait.mensajes_disponibles - mensajes_ignorados
   end
 
   def mensajes_requeridos
     @trait.mensajes_requeridos
+  end
+
+  def metodos
+    @trait.metodos
+  end
+
+  def metodo_llamado(unSelector)
+    @trait.metodo_llamado(unSelector)
   end
 
   def tiene_requeridos?
@@ -25,7 +25,7 @@ class TraitDisminuido < TraitAbstracto
   end
 
   def mensajes_ignorados
-    @trait.mensajes_ignorados << @mensajes_ignorados
+    @trait.mensajes_ignorados + @mensajes_ignorados
   end
 end
 

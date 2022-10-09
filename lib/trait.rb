@@ -35,30 +35,22 @@ class Trait < TraitAbstracto
     @mensajes_requeridos = unos_mensajes_requeridos
   end
 
-  def aplicarse_en(una_clase, mensajes_ignorados = [])
-    comprobar_requerimientos(una_clase)
-    puts
-    mensajes_a_ignorar = mensajes_en_comun(una_clase) + mensajes_ignorados
-    mensajes_a_aplicar = @hash_de_metodos.keys - mensajes_a_ignorar
-    mensajes_a_aplicar.each { |mensaje|
-          una_clase.define_method(mensaje, @hash_de_metodos[mensaje])
-        }
-  end
-
   def mensajes_disponibles
-    @hash_de_metodos.keys
+    @hash_de_metodos.keys.to_set
   end
-
-  def mensajes_aplicables
-    mensajes_disponibles
+  def metodo_llamado(unSelector)
+    @hash_de_metodos[unSelector]
   end
-
   def mensajes_requeridos
-    @mensajes_requeridos.clone
+    @mensajes_requeridos.clone.to_set
   end
 
   def tiene_requeridos?
     !@mensajes_requeridos.empty?
+  end
+
+  def metodos
+    @hash_de_metodos.values.to_set
   end
 
   def mensajes_ignorados

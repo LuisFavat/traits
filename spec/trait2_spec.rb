@@ -202,6 +202,7 @@ describe 'trait' do
   describe 'requeridos' do
     it 'Al aplicarse un trait con requeridos no satisfechos y llamar al mensaje lanza una excepcion' do
       un_trait = Trait.definir_comportamiento do
+        requiere :m2
         def m1
           self.m2
         end
@@ -209,7 +210,6 @@ describe 'trait' do
       una_clase = Class.new
       instancia = una_clase.new
 
-      un_trait.requiere(:m2)
       un_trait.aplicarse_en(una_clase)
 
       expect{instancia.m1}.to raise_error( NoMethodError )
