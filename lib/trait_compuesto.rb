@@ -26,7 +26,11 @@ class TraitCompuesto < TraitAbstracto
   end
 
   def metodo(un_mensaje)
-    @trait.metodo(un_mensaje)
+    metodo = @trait_a.metodo(un_mensaje)
+    if metodo.nil?
+      metodo = @trait_b.metodo(un_mensaje)
+    end
+    metodo
   end
 end
 
