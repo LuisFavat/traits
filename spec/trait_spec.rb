@@ -62,45 +62,11 @@ describe 'trait' do
 
       expect(instancia.m1).to eq('hola, estoy en una clase')
     end
-
-    it 'Al aplicar traits que tienen metodos con el mismo nombre al querer usarlos se lanza una excepción' do
-      trait_1 =  Trait.definir_comportamiento do
-        def m1
-          "metodo m1"
-        end
-      end
-      trait_2 = Trait.definir_comportamiento do
-        def m1
-          "otro metodo m1"
-        end
-      end
-
-      una_clase = Class.new
-
-      trait_compuesto = trait_1 + trait_2
-      expect { trait_compuesto.aplicarse_en(una_clase) }.to raise_error("Conflicto entre traits")
-    end
-
-    it 'Al aplicar traits con mensajes conflictivos pero son el mismo metodo, se lleva a cabo la aplicacion del trait exitosamente ' do
-
-      trait_1 =  Trait.definir_comportamiento do
-        def m1
-          "metodo m1"
-        end
-      end
-      una_clase = Class.new
-      instancia = una_clase.new
-
-      trait_compuesto = trait_1 + trait_1
-      trait_compuesto.aplicarse_en(una_clase)
-      trait_compuesto.aplicarse_en(una_clase)
-
-      expect(instancia.m1).to eq("metodo m1")
-    end
   end
 
 
   describe 'Algebra' do
+    
     it 'Se resta un mensaje a un trait y las instancias no responden al mismo' do
       un_trait = Trait.definir_comportamiento do
         def m1
@@ -233,6 +199,80 @@ describe 'trait' do
       expect(trait_1 + trait_3).not_to eq(trait_1 + trait_2)
       expect(trait_1 + trait_1).to eq(trait_1)
     end
+
+    it 'Al aplicar traits que tienen metodos con el mismo nombre al querer usarlos se lanza una excepción' do
+      trait_1 =  Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+      trait_2 = Trait.definir_comportamiento do
+        def m1
+          "otro metodo m1"
+        end
+      end
+
+      una_clase = Class.new
+
+      trait_compuesto = trait_1 + trait_2
+      expect { trait_compuesto.aplicarse_en(una_clase) }.to raise_error("Conflicto entre traits")
+    end
+
+    it 'Al aplicar traits con mensajes conflictivos pero son el mismo metodo, se lleva a cabo la aplicacion del trait exitosamente ' do
+
+      trait_1 =  Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      trait_compuesto = trait_1 + trait_1
+      trait_compuesto.aplicarse_en(una_clase)
+
+      expect(instancia.m1).to eq("metodo m1")
+    end
+
+    it 'Se resuelve un conflicto entre traits restando el metodo conflictivo, el trait resutaltante se aplica con exito' do
+      trait_1 =  Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+      trait_2 = Trait.definir_comportamiento do
+        def m1
+          "otro metodo m1"
+        end
+      end
+      una_clase = Class.new
+      instacia = una_clase.new
+
+      trait_compuesto = trait_1 + (trait_2 - :m1)
+      trait_compuesto.aplicarse_en(una_clase)
+
+      expect(instacia.m1).to eq("metodo m1")
+    end
+
+    it 'Se resuelve un conflicto entre traits quitando metodo conflictivo, el trait resutaltante se aplica con exito' do
+      trait_1 =  Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+      trait_2 = Trait.definir_comportamiento do
+        def m1
+          "otro metodo m1"
+        end
+      end
+      una_clase = Class.new
+      instacia = una_clase.new
+
+      trait_compuesto = (trait_1 + trait_2) - :m1
+      trait_compuesto.aplicarse_en(una_clase)
+
+      expect{ instacia.m1 }.to raise_error(NoMethodError)
+    end
   end
 
   describe 'requeridos' do
@@ -344,6 +384,51 @@ describe 'trait' do
 
       expect(una_instancia.otro_mensaje).to eq('este es otro mensaje')
       expect(una_instancia.mensaje_dos).to eq('este es otro mensaje')
+    end
+
+    it 'should dasfsdf' do
+      trait_1 = Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+      trait_2 = Trait.definir_comportamiento do
+        def m1
+          "otro metodo m1"
+        end
+      end
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      trait_con_alias = ((trait_1 << { m1: :m2 }) - :m1) + ((trait_2 << { m1: :m3 }) - :m1)
+
+      trait_con_alias.aplicarse_en(una_clase)
+
+      expect(instancia.respond_to?(:m1)).to be(false)
+      expect(instancia.m2).to eq("metodo m1")
+      expect(instancia.m3).to eq("otro metodo m1")
+    end
+  end
+
+  describe 'Estrategias de resolucion' do
+    it 'should lksjdflkajsd' do
+=begin
+      trait_1 = Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+      trait_2 = Trait.definir_comportamiento do
+        def m1
+          "otro metodo m1"
+        end
+      end
+
+      trait_con_conflicto = trait_1 + trait_2
+
+      solucionador_de_conflictos = Solucionador(trait_con_conflicto, ElegirPredefinido(:m1))
+=end
     end
   end
 

@@ -1,7 +1,7 @@
 class TraitAbstracto
 
-  def initialize
-    @alias = {}
+  def initialize(hash_de_alias = {})
+    @alias = hash_de_alias
   end
 
   def aplicarse_en(una_clase)
@@ -43,14 +43,16 @@ class TraitAbstracto
     raise NotImplementedError
   end
 
+=begin
   def <<(hash_de_alias)
+
     hash_de_alias.each do |mensaje, apodo|
       @alias[mensaje] = apodo
     end
-    self
+
   end
+=end
 
   def comprobar_conflictos
-    nil
   end
 end

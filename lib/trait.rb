@@ -31,8 +31,8 @@ class Trait < TraitAbstracto
   end
   
   # metodos de instancia
-  def initialize(unos_metodos, unos_mensajes_requeridos = [])
-    super()
+  def initialize(hash_de_alias = {},unos_metodos, unos_mensajes_requeridos = [])
+    super(hash_de_alias)
     @hash_de_metodos = unos_metodos
     @mensajes_requeridos = unos_mensajes_requeridos
   end
@@ -59,6 +59,11 @@ class Trait < TraitAbstracto
 
   def metodo(un_mensaje)
     @hash_de_metodos[un_mensaje]
+  end
+
+  def <<(hash_de_alias)
+    hash_de_metodos = @alias.merge(hash_de_alias)
+    Trait.new(@hash_de_metodos.clone, mensajes_requeridos)
   end
 
 

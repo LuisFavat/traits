@@ -23,7 +23,7 @@ class TraitCompuesto < TraitAbstracto
   end
 
   def mensajes_ignorados
-    @trait_a.mensajes_ignorados + (@trait_b..mensajes_ignorados.union)
+    @trait_a.mensajes_ignorados + @trait_b.mensajes_ignorados
   end
 
   def metodo(un_mensaje)
@@ -48,8 +48,6 @@ class TraitCompuesto < TraitAbstracto
         raise "Conflicto entre traits"
       end
     end
-    @trait_a.comprobar_conflictos
-    @trait_b.comprobar_conflictos
     nil
   end
 end
