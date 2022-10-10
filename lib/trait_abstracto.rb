@@ -5,6 +5,7 @@ class TraitAbstracto
   end
 
   def aplicarse_en(una_clase)
+    comprobar_conflictos
     mensajes_sin_conflicto = (mensajes_disponibles - una_clase.instance_methods)
 
     mensajes_sin_conflicto.each do |mensaje|
@@ -47,5 +48,9 @@ class TraitAbstracto
       @alias[mensaje] = apodo
     end
     self
+  end
+
+  def comprobar_conflictos
+    nil
   end
 end

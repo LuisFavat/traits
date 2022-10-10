@@ -1,6 +1,7 @@
 require 'trait_abstracto'
 require 'trait_disminuido'
 require 'trait_compuesto'
+require 'interfaz_de_usuario'
 
 class Trait < TraitAbstracto
 
