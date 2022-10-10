@@ -1,4 +1,5 @@
 class TraitCompuesto < TraitAbstracto
+
   def initialize(un_trait_a, un_trait_b)
     super()
     @trait_a = un_trait_a

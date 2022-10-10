@@ -311,11 +311,4 @@ describe 'trait' do
       expect(una_instancia.mensaje_dos).to eq('este es otro mensaje')
     end
   end
-
-  it 'should ' do
-    @hash = {}
-    puts @hash["algo"] == nil
-
-    end
-
 end

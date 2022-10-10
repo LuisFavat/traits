@@ -13,7 +13,7 @@ class Trait < TraitAbstracto
 
       def self.requiere(*un_mensaje)
         @mensajes_requeridos << un_mensaje
-        @mensajes_requeridos = @mensajes_requeridos.flatten
+        @mensajes_requeridos.flatten!
       end
 
       def self.mensajes_requeridos
