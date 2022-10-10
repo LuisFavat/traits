@@ -36,9 +36,17 @@ class TraitCompuesto < TraitAbstracto
 
   def comprobar_conflictos
     mensajes_conflictivos = @trait_a.mensajes_disponibles.intersection(@trait_b.mensajes_disponibles)
+    hay_conflicto = false
+
     unless mensajes_conflictivos.empty?
-      # TODO mostrar los nombres de los traits
-      raise "Conflicto entre traits"
+      mensajes_conflictivos.each do |selector|
+        hay_conflicto ||= (@trait_a.metodo(selector) != @trait_b.metodo(selector))
+      end
+
+      if hay_conflicto
+        # TODO mostrar los nombres de los traits
+        raise "Conflicto entre traits"
+      end
     end
     @trait_a.comprobar_conflictos
     @trait_b.comprobar_conflictos

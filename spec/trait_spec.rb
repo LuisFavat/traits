@@ -63,7 +63,7 @@ describe 'trait' do
       expect(instancia.m1).to eq('hola, estoy en una clase')
     end
 
-    it 'Al usar traits que tienen metodos con el mismo nombre al querer usarlos se lanza una excepción' do
+    it 'Al aplicar traits que tienen metodos con el mismo nombre al querer usarlos se lanza una excepción' do
       trait_1 =  Trait.definir_comportamiento do
         def m1
           "metodo m1"
@@ -78,9 +78,27 @@ describe 'trait' do
       una_clase = Class.new
 
       trait_compuesto = trait_1 + trait_2
-      expect{ trait_compuesto.aplicarse_en(una_clase) }.to raise_error("Conflicto entre traits")
+      expect { trait_compuesto.aplicarse_en(una_clase) }.to raise_error("Conflicto entre traits")
+    end
+
+    it 'Al aplicar traits con mensajes conflictivos pero son el mismo metodo, se lleva a cabo la aplicacion del trait exitosamente ' do
+
+      trait_1 =  Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      trait_compuesto = trait_1 + trait_1
+      trait_compuesto.aplicarse_en(una_clase)
+      trait_compuesto.aplicarse_en(una_clase)
+
+      expect(instancia.m1).to eq("metodo m1")
     end
   end
+
 
   describe 'Algebra' do
     it 'Se resta un mensaje a un trait y las instancias no responden al mismo' do
@@ -328,9 +346,6 @@ describe 'trait' do
       expect(una_instancia.mensaje_dos).to eq('este es otro mensaje')
     end
   end
-
-
-
 
   describe 'Iterfaz de usuario' do
 
