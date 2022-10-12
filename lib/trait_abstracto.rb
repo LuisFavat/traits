@@ -43,8 +43,16 @@ class TraitAbstracto
     raise NotImplementedError
   end
 
-  def <<(hash_de_alias)
+  def metodos
+    raise NotImplementedError
+  end
 
+  def metodo(un_selector)
+    raise NotImplementedError
+  end
+
+  def tiene_requeridos?
+    raise NotImplementedError
   end
 
   def comprobar_conflictos
