@@ -4,6 +4,7 @@ require 'trait'
 describe 'trait' do
   describe 'aplicacion de traits' do
     it 'Se aplica un trait a una clase y sus intancias responden a los mensajes definidos por el trait' do
+      #Preparacion
       un_trait = Trait.definir_comportamiento do
         def m1
           'hola trait'
@@ -18,52 +19,52 @@ describe 'trait' do
       expect(instancia.m1).to eq('hola trait')
     end
 
-    it 'Se aplica un trait a una clase con un mensaje en comun y prevalece el comportamiento definido de la clase' do
+    it 'Se aplica un trait a una clase con un selector en comun y prevalece el comportamiento definido de la clase' do
+      #Preparacion
       un_trait = Trait.definir_comportamiento do
         def m1
-          'hola trait'
+          'metodo m1'
         end
       end
 
       una_clase = Class.new do
         def m1
-          'hola, soy una_clase'
+          'otro metodo m1'
         end
       end
+
       instancia = una_clase.new
 
       un_trait.aplicarse_en(una_clase)
 
-      expect(instancia.m1).to eq('hola, soy una_clase')
+      expect(instancia.m1).to eq('otro metodo m1')
     end
 
-    it 'Se aplica un trait a una clase con un mensaje definido en su jerarquia y prevalece el comportamiento de este ultimo' do
+    it 'Se aplica un trait a una clase con un selector definido en su jerarquia y prevalece el comportamiento de este ultimo' do
+      #Preparacion
       un_trait = Trait.definir_comportamiento do
         def m1
-          'hola trait'
+          'metodo m1'
         end
       end
 
-      una_clase = Class.new do
+      super_clase = Class.new do
         def m1
-          'hola, estoy en una clase'
+          'otro metodo m1'
         end
       end
 
-      una_subclase = Class.new(una_clase) do
-        def m2
-          'hola, estoy en una subclase'
-        end
-      end
+      una_subclase = Class.new(super_clase)
 
       instancia = una_subclase.new
 
       un_trait.aplicarse_en(una_subclase)
 
-      expect(instancia.m1).to eq('hola, estoy en una clase')
+      expect(instancia.m1).to eq('otro metodo m1')
     end
 
-    it 'Al aplicar traits que tienen metodos con el mismo nombre al querer usarlos se lanza una excepción' do
+    it 'No se puede aplicar traits con selectores en conflicto' do
+      #Preparacion
       trait_1 =  Trait.definir_comportamiento do
         def m1
           "metodo m1"
@@ -81,8 +82,8 @@ describe 'trait' do
       expect { trait_compuesto.aplicarse_en(una_clase) }.to raise_error("Conflicto entre traits")
     end
 
-    it 'Al aplicar traits con mensajes conflictivos pero son el mismo metodo, se lleva a cabo la aplicacion del trait exitosamente ' do
-
+    it 'Se puede aplicar traits con selectores conflictivos, si son el mismo trait' do
+      #Preparacion
       trait_1 =  Trait.definir_comportamiento do
         def m1
           "metodo m1"
@@ -93,15 +94,95 @@ describe 'trait' do
 
       trait_compuesto = trait_1 + trait_1
       trait_compuesto.aplicarse_en(una_clase)
+
+      expect(instancia.m1).to eq("metodo m1")
+    end
+
+    it 'Se puede aplicar traits con selectores conflictivos si los metodos son los mismos' do
+      # Preparacion
+=begin
+      modulo_con_metodo = Module.new {
+        def self.m1
+          "metodo m1"
+        end
+      }
+
+      metodo_sin_vincular = modulo_con_metodo.method(:m1)
+      puts "@here"
+      puts metodo_sin_vincular
+      comportamiento = proc {self.define_method(:m1, &metodo_sin_vincular)}
+
+
+      trait_1 = Trait.definir_comportamiento(&comportamiento)
+      trait_2 = Trait.definir_comportamiento(&comportamiento)
+=end
+      trait_1 = Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+      trait_2 = Trait.definir_comportamiento do
+      end
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      trait_compuesto = trait_1 + trait_2
       trait_compuesto.aplicarse_en(una_clase)
 
+      expect(instancia.m1).to eq("metodo m1")
+    end
+
+    it 'idem ant pero de otra forma' do
+      # Preparacion
+
+      trait_1 = Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+      trait_2 = trait_1.clone
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      trait_compuesto = trait_1 + trait_2
+      trait_compuesto.aplicarse_en(una_clase)
+
+      expect(trait_1.__id__).not_to eq(trait_2.__id__)
       expect(instancia.m1).to eq("metodo m1")
     end
   end
 
 
   describe 'Algebra' do
-    it 'Se resta un mensaje a un trait y las instancias no responden al mismo' do
+    it 'Se resta un selector a un trait y las instancias no responden al mismo' do
+      # Preparacion
+      un_trait = Trait.definir_comportamiento do
+        def m1
+          'metodo m1'
+        end
+      end
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      trait_disminuido = un_trait - (:m1)
+      trait_disminuido.aplicarse_en(una_clase)
+
+      expect(instancia.respond_to?(:m1)).to be(false)
+    end
+
+    it 'No se puede restar un selector que no contiene el trait' do
+      # Preparacion
+      un_trait = Trait.definir_comportamiento do
+      end
+
+      expect{ un_trait - (:m1) }.to raise_error("No se puede restar un selector que no esta contenido en el trait")
+    end
+
+    it 'Se resta un selector a un trait que define varios metodos  y las instancias responden a los selectores definidos' do
+      # Preparacion
       un_trait = Trait.definir_comportamiento do
         def m1
           'hola trait'
@@ -122,7 +203,8 @@ describe 'trait' do
       expect(instancia.respond_to?(:m2)).to be(false)
     end
 
-    it 'Se resta un mensaje al resultado de restar un mensaje a un trait y las instancias no responden a los mismos' do
+    it 'Se restan varios selectores al trait, la instancia solo responde a los metodos definidos' do
+      # Preparacion
       un_trait = Trait.definir_comportamiento do
         def m1
           'hola trait'
@@ -148,7 +230,8 @@ describe 'trait' do
       expect(instancia.respond_to?(:m2)).to be(false)
     end
 
-    it 'Se restan un conjunto de mensajes a un trait y las instancias no responden a los mismos' do
+    it 'Se restan un conjunto de mensajes a un trait y la instancia solo responde a los metodos definidos ' do
+      # Preparacion
       un_trait = Trait.definir_comportamiento do
         def m1
           'hola trait'
@@ -174,7 +257,8 @@ describe 'trait' do
       expect(instancia.respond_to?(:m2)).to be(false)
     end
 
-    it 'Se componen varios traits, se aplican a una clase y sus instancias entienden los mensajes definidos por estos' do
+    it 'Se aplica un trait que es la composicion de varios traits, la instancia sabe responder con todos los metodos definidos por el trait' do
+      # Preparacion
      trait_1 = Trait.definir_comportamiento do
        def m1
          'm1'
@@ -224,19 +308,26 @@ describe 'trait' do
         end
       end
 
-      trait_compuesto = (trait_1 + trait_2) + (trait_2 + trait_1)
-
+      # asociativa
       expect(trait_1 + (trait_2 + trait_3)).to eq((trait_1 + trait_2) + trait_3)
+
+      # conmutativa
       expect(trait_1 + trait_2).to eq(trait_2 + trait_1)
-      expect(trait_compuesto).to eq(trait_1 + trait_2)
-      expect(trait_compuesto).to eq(trait_2 + trait_1)
-      expect(trait_1 + trait_3).not_to eq(trait_1 + trait_2)
+
+      # idempotente
       expect(trait_1 + trait_1).to eq(trait_1)
+
+      # conmutativa e idempotente
+      expect((trait_1 + trait_2) + (trait_2 + trait_1)).to eq(trait_1 + trait_2)
+      expect((trait_1 + trait_2) + (trait_2 + trait_1)).to eq(trait_2 + trait_1)
+
+      # los trait pueden ser distintos, no era un truco!!!
+      expect(trait_1 + trait_3).not_to eq(trait_1 + trait_2)
     end
   end
 
   describe 'requeridos' do
-    it 'Al aplicarse un trait con requeridos no satisfechos y llamar al mensaje lanza una excepcion' do
+    it 'Al aplicarse un trait con requerimientos no satisfechos la instancia no puede respoder al mensaje conflictivo' do
       un_trait = Trait.definir_comportamiento do
         requiere :m2
         def m1
@@ -251,7 +342,7 @@ describe 'trait' do
       expect { instancia.m1 }.to raise_error(NoMethodError)
     end
 
-    it 'Al aplicarse un trait con requeridos a una clase que define el mensaje se invoca correctamente por la instancia' do
+    it 'Al aplicarse un trait con requerimientos a una clase que satisface dichos requerimientos, la instancia responde ccrrectamente al metodo definido por el trait' do
       un_trait = Trait.definir_comportamiento do
         requiere :m2
 
@@ -272,7 +363,9 @@ describe 'trait' do
       expect(instancia.m1).to eq('m2')
     end
 
-    it 'Al combinarse un trait con requeridos con otro que define el mensaje el resultante no conserva el requerimiento' do
+    it 'Al combinarse un trait con requerimientos con otro trait que satisface el requerimiento,
+         el trait resultante no conserva el requerimiento' do
+
       trait_1 = Trait.definir_comportamiento do
         requiere :m2
 
@@ -297,7 +390,7 @@ describe 'trait' do
       expect(trait_combinado.tiene_requeridos?).to be(false)
     end
 
-    it 'Al combinarse un trait con requeridos no satisfechos el resultante los conserva' do
+    it 'Al combinarse un trait con requerimientos no satisfechos, el trait resultante  conserva los mismo requerimientos' do
       trait_1 = Trait.definir_comportamiento do
         requiere :m2
 
@@ -314,18 +407,44 @@ describe 'trait' do
       una_clase = Class.new
       instancia = una_clase.new
 
+
       trait_combinado = trait_1 + trait_2
       trait_combinado.aplicarse_en(una_clase)
 
       expect { instancia.m1 }.to raise_error(NoMethodError)
-      expect(trait_combinado.tiene_requeridos?).to be(true)
+      expect(trait_combinado.selectores_requeridos == Set[:m2]).to eq( true )
+    end
+
+    it 'Al combinarse un trait con requerimientos no satisfechos, el trait resultante  conserva los mismo requerimientos fgd' do
+      trait_1 = Trait.definir_comportamiento do
+        requiere :m3
+
+        def m1
+          self.m3
+        end
+      end
+      trait_2 = Trait.definir_comportamiento do
+        requiere :m4
+
+        def m2
+          self.m4
+        end
+      end
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+
+      trait_combinado = trait_1 + trait_2
+
+      expect(trait_combinado.selectores_requeridos == Set[:m3, :m4]).to eq( true )
     end
   end
 
   describe 'alias de mensajes' do
 
 
-    it 'Se define un alias para un mensaje de un trait y al aplicarse la instancia entiende el mensaje original y el alias' do
+    it 'Se define un alias para un mensaje de un trait, al aplicarse la instancia entiende el mensaje original y el alias' do
 
       un_trait = Trait.definir_comportamiento do
         def m1

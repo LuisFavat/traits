@@ -4,12 +4,9 @@ class TraitAbstracto
   def aplicarse_en(una_clase)
     comprobar_conflictos
 
-    selectores_sin_conflicto = (selectores_disponibles - una_clase.instance_methods)
-
-    selectores_sin_conflicto.each do |selector|
+    selectores_sin_conflicto(una_clase).each do |selector|
       una_clase.define_method(selector, metodo(selector))
     end
-
   end
 
   def +(un_trait)
@@ -17,6 +14,7 @@ class TraitAbstracto
   end
 
   def -(un_symbol_method)
+    # TODO ver si existe el selector que es pasa como argumento
     TraitDisminuido.new(self, *un_symbol_method)
   end
 
@@ -45,5 +43,10 @@ class TraitAbstracto
 
   def comprobar_conflictos
     nil
+  end
+
+  protected
+  def selectores_sin_conflicto(una_clase)
+    selectores_disponibles - una_clase.instance_methods
   end
 end
