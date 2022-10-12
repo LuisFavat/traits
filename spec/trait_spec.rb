@@ -324,6 +324,25 @@ describe 'trait' do
 
   describe 'alias de mensajes' do
 
+
+    it 'Se define un alias para un mensaje de un trait y al aplicarse la instancia entiende el mensaje original y el alias' do
+
+      un_trait = Trait.definir_comportamiento do
+        def m1
+          'metodo m1'
+        end
+      end
+
+      una_clase = Class.new
+      una_instancia = una_clase.new
+
+      trait_con_alias = un_trait << { m1: :m2 }
+      trait_con_alias.aplicarse_en una_clase
+
+      expect(una_instancia.m1).to eq('metodo m1')
+      expect(una_instancia.m2).to eq('metodo m1')
+    end
+
     it 'Se define un alias para un mensaje de un trait y se conservan ambos asociados al mismo metodo' do
 
       un_trait = Trait.definir_comportamiento do
@@ -344,6 +363,48 @@ describe 'trait' do
 
       expect(una_instancia.otro_mensaje).to eq('este es otro mensaje')
       expect(una_instancia.mensaje_dos).to eq('este es otro mensaje')
+    end
+
+    it 'jkdsljflsjd dasfsdf' do
+      trait_1 = Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      trait_con_alias = (trait_1 << { m1: :m2 }) - :m1
+
+      trait_con_alias.aplicarse_en(una_clase)
+
+      expect(instancia.respond_to?(:m1)).to be(false)
+      expect(instancia.m2).to eq("metodo m1")
+    end
+
+    it 'should dasfsdf' do
+      trait_1 = Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+      trait_2 = Trait.definir_comportamiento do
+        def m1
+          "otro metodo m1"
+        end
+      end
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      trait_con_alias = ((trait_1 << { m1: :m2 }) - :m1) + ((trait_2 << { m1: :m3 }) - :m1)
+
+      trait_con_alias.aplicarse_en(una_clase)
+
+      expect(instancia.respond_to?(:m1)).to be(false)
+      expect(instancia.m2).to eq("metodo m1")
+      expect(instancia.m3).to eq("otro metodo m1")
     end
   end
 

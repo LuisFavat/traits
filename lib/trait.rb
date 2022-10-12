@@ -10,46 +10,46 @@ class Trait < TraitAbstracto
 
     modulo_con_metodos = Module.new {
 
-      @mensajes_requeridos = []
+      @selectores_requeridos = []
 
-      def self.requiere(*un_mensaje)
-        @mensajes_requeridos << un_mensaje
-        @mensajes_requeridos.flatten!
+      def self.requiere(*un_selector)
+        @selectores_requeridos << un_selector
+        @selectores_requeridos.flatten!
       end
 
-      def self.mensajes_requeridos
-        @mensajes_requeridos
+      def self.selectores_requeridos
+        @selectores_requeridos
       end
     }
     modulo_con_metodos.class_exec(&bloque_de_metodos)
 
     hash_de_metodos = {}
-    modulo_con_metodos.instance_methods(false).each do |mensaje|
-      hash_de_metodos[mensaje] = modulo_con_metodos.instance_method(mensaje)
+    modulo_con_metodos.instance_methods(false).each do |selector|
+      hash_de_metodos[selector] = modulo_con_metodos.instance_method(selector)
     end
-    new(hash_de_metodos, modulo_con_metodos.mensajes_requeridos)
+    new(hash_de_metodos, modulo_con_metodos.selectores_requeridos)
   end
   
   # metodos de instancia
-  def initialize(unos_metodos, unos_mensajes_requeridos = [])
+  def initialize(unos_metodos, unos_selectores_requeridos = [])
     super()
     @hash_de_metodos = unos_metodos
-    @mensajes_requeridos = unos_mensajes_requeridos
+    @selectores_requeridos = unos_selectores_requeridos
   end
 
-  def mensajes_disponibles
+  def selectores_disponibles
     @hash_de_metodos.keys.to_set
   end
 
-  def mensajes_requeridos
-    @mensajes_requeridos.clone.to_set
+  def selectores_requeridos
+    @selectores_requeridos.clone.to_set
   end
 
   def tiene_requeridos?
-    !@mensajes_requeridos.empty?
+    !@selectores_requeridos.empty?
   end
 
-  def mensajes_ignorados
+  def selectores_ignorados
     []
   end
 
@@ -57,25 +57,18 @@ class Trait < TraitAbstracto
     @hash_de_metodos.values.to_set
   end
 
-  def metodo(un_mensaje)
-    @hash_de_metodos[un_mensaje]
+  def metodo(un_selector)
+    @hash_de_metodos[un_selector]
   end
 
 
 
   private
 
-  def mensajes_en_comun(una_clase)
-    symbol_methods_class = una_clase.instance_methods
-    symbol_methods_trait = @hash_de_metodos.keys
-    symbol_methods_class.intersection(symbol_methods_trait)
-  end
-
   def comprobar_requerimientos(una_clase)
-    mensajes_en_clase = una_clase.instance_methods
-    requerimientos = @mensajes_requeridos - mensajes_en_clase
-    puts 'requerimientos'
-    puts requerimientos.empty?
+    selectores_de_instancia = una_clase.instance_methods
+    requerimientos = @selectores_requeridos - selectores_de_instancia
+
     unless requerimientos.empty?
       raise("Faltan los siguientes metoddos requeridos: #{requerimientos}")
     end
