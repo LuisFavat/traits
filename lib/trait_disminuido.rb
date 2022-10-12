@@ -1,8 +1,9 @@
 class TraitDisminuido < TraitAbstracto
-  def initialize(un_trait, *un_ingnorar_simbolos)
+
+  def initialize(un_trait, selectores_ignorados)
     super()
     @trait = un_trait
-    @selectores_ignorados = [un_ingnorar_simbolos].flatten
+    @selectores_ignorados = selectores_ignorados
   end
 
   def selectores_disponibles

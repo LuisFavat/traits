@@ -252,6 +252,8 @@ describe 'trait' do
       trait_disminuido = un_trait - [:m1, :m2]
       trait_disminuido.aplicarse_en(una_clase)
 
+      trait_d = TraitDisminuido.new(un_trait, :m1)
+
       expect(instancia.m3).to eq('hola')
       expect(instancia.respond_to?(:m1)).to be(false)
       expect(instancia.respond_to?(:m2)).to be(false)

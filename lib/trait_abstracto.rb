@@ -13,9 +13,15 @@ class TraitAbstracto
     TraitCompuesto.new(self, un_trait)
   end
 
-  def -(un_symbol_method)
-    # TODO ver si existe el selector que es pasa como argumento
-    TraitDisminuido.new(self, *un_symbol_method)
+  def -(un_selector)
+    selectores = [un_selector].flatten
+    selectores.each do |selector|
+      unless selectores_disponibles.include?(selector)
+        raise "No se puede restar un selector que no esta contenido en el trait"
+      end
+    end
+
+    TraitDisminuido.new(self, selectores)
   end
 
   def ==(un_trait)
