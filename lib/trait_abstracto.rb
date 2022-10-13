@@ -25,6 +25,10 @@ class TraitAbstracto
     TraitDisminuido.new(self, selectores)
   end
 
+  def <<(unos_alias)
+    TraitAlias.new(self, unos_alias)
+  end
+
   def ==(un_trait)
     # TODO manejar el caso de cuando se compara un objeto que no sea un trait
     selectores_disponibles == un_trait.selectores_disponibles &&
@@ -57,7 +61,7 @@ class TraitAbstracto
   end
 
   def comprobar_conflictos
-    nil
+    raise NotImplementedError
   end
 
   protected

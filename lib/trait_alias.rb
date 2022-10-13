@@ -31,4 +31,8 @@ class TraitAlias < TraitAbstracto
     @trait.metodo(selector)
   end
 
+  def comprobar_conflictos
+    @trait.comprobar_conflictos
+  end
+
 end

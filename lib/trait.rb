@@ -63,11 +63,6 @@ class Trait < TraitAbstracto
     !@selectores_requeridos.empty?
   end
 
-  def <<(unos_alias)
-    TraitAlias.new(self, unos_alias)
-  end
-
-
   private
 
   def comprobar_requerimientos(una_clase)

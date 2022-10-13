@@ -311,7 +311,37 @@ describe 'trait' do
      expect(instancia.m1).to eq('m1')
      expect(instancia.m2).to eq('m2')
      expect(instancia.m3).to eq('m3')
-   end
+    end
+
+    it 'asdasd' do
+      # Preparacion
+      trait_1 = Trait.definir_comportamiento do
+        def m1
+          'm1'
+        end
+      end
+
+      trait_2 = Trait.definir_comportamiento do
+        def m1
+          'm1'
+        end
+
+        def m2
+          "m2"
+        end
+      end
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      # Ejercitacion
+      trait_compuesto = (trait_1 + trait_2) - :m2
+      otro = (trait_1 + trait_2) << {m2: :m3}
+
+      trait_compuesto.aplicarse_en(una_clase)
+      otro.aplicarse_en(una_clase)
+
+    end
 
     it 'La combinacion de traits es asociativa, conmutable e idempotente' do
       # Preparacion
