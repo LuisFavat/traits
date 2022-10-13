@@ -5,20 +5,20 @@ class TraitDisminuido < TraitAbstracto
     @mensajes_ignorados = [un_ingnorar_simbolos].flatten
   end
 
-  def mensajes_disponibles
-    @trait.mensajes_disponibles - mensajes_ignorados
+  def selectores_disponibles
+    @trait.selectores_disponibles - selectores_ignorados
   end
 
-  def mensajes_requeridos
-    @trait.mensajes_requeridos
+  def selectores_requeridos
+    @trait.selectores_requeridos
   end
 
   def tiene_requeridos?
     @trait.tiene_requeridos?
   end
 
-  def mensajes_ignorados
-    @trait.mensajes_ignorados + @mensajes_ignorados
+  def selectores_ignorados
+    @trait.selectores_ignorados + @mensajes_ignorados
   end
 
   def metodos

@@ -6,24 +6,24 @@ class TraitCompuesto < TraitAbstracto
     @trait_b = un_trait_b
   end
 
-  def mensajes_disponibles
-    @trait_a.mensajes_disponibles + @trait_b.mensajes_disponibles
+  def selectores_disponibles
+    @trait_a.selectores_disponibles + @trait_b.selectores_disponibles
   end
 
   def metodos
     @trait_a.metodos + @trait_b.metodos
   end
 
-  def mensajes_requeridos
-    @trait_a.mensajes_requeridos + @trait_b.mensajes_requeridos
+  def selectores_requeridos
+    @trait_a.selectores_requeridos + @trait_b.selectores_requeridos
   end
 
   def tiene_requeridos?
-    !(mensajes_requeridos - mensajes_disponibles).empty?
+    !(selectores_requeridos - selectores_disponibles).empty?
   end
 
-  def mensajes_ignorados
-    @trait_a.mensajes_ignorados + (@trait_b..mensajes_ignorados.union)
+  def selectores_ignorados
+    @trait_a.selectores_ignorados + (@trait_b..selectores_ignorados.union)
   end
 
   def metodo(un_mensaje)
@@ -35,7 +35,7 @@ class TraitCompuesto < TraitAbstracto
   end
 
   def comprobar_conflictos
-    mensajes_conflictivos = @trait_a.mensajes_disponibles.intersection(@trait_b.mensajes_disponibles)
+    mensajes_conflictivos = @trait_a.selectores_disponibles.intersection(@trait_b.selectores_disponibles)
     unless mensajes_conflictivos.empty?
       # TODO mostrar los nombres de los traits
       raise "Conflicto entre traits"

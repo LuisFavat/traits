@@ -1,64 +1,66 @@
 require 'trait_abstracto'
 require 'trait_disminuido'
 require 'trait_compuesto'
+require 'diccionario_selectores'
 require 'interfaz_de_usuario'
 
 class Trait < TraitAbstracto
 
   # metodos de clase
-  def self.definir_comportamiento(&bloque_de_metodos)
+  def self.definir_comportamiento(&bloque_de_definiciones)
 
-    modulo_con_metodos = Module.new {
+    proveedor_comportamiento = Module.new {
 
-      @mensajes_requeridos = []
+      @selectores_requeridos = []
 
-      def self.requiere(*un_mensaje)
-        @mensajes_requeridos << un_mensaje
-        @mensajes_requeridos.flatten!
+      def self.requiere(*un_selector)
+        @selectores_requeridos << un_selector
+        @selectores_requeridos.flatten!
       end
 
-      def self.mensajes_requeridos
-        @mensajes_requeridos
+      def self.selectores_requeridos
+        @selectores_requeridos
       end
     }
-    modulo_con_metodos.class_exec(&bloque_de_metodos)
+    proveedor_comportamiento.module_exec(&bloque_de_definiciones)
 
-    hash_de_metodos = {}
-    modulo_con_metodos.instance_methods(false).each do |mensaje|
-      hash_de_metodos[mensaje] = modulo_con_metodos.instance_method(mensaje)
+    diccionario_selectores = DiccionarioSelectores.new
+    proveedor_comportamiento.instance_methods(false).each do |selector|
+      #diccionario_selectores[selector] = modulo_con_metodos.instance_method(selector)
+      diccionario_selectores.agregar(selector, proveedor_comportamiento.instance_method(selector))
     end
-    new(hash_de_metodos, modulo_con_metodos.mensajes_requeridos)
+    new(diccionario_selectores, proveedor_comportamiento.selectores_requeridos)
   end
   
   # metodos de instancia
-  def initialize(unos_metodos, unos_mensajes_requeridos = [])
+  def initialize(diccionario_selectores, selectores_requeridos = [])
     super()
-    @hash_de_metodos = unos_metodos
-    @mensajes_requeridos = unos_mensajes_requeridos
+    @diccionario_selectores = diccionario_selectores
+    @selectores_requeridos = selectores_requeridos
   end
 
-  def mensajes_disponibles
-    @hash_de_metodos.keys.to_set
+  def selectores_disponibles
+    @diccionario_selectores.selectores
   end
 
-  def mensajes_requeridos
-    @mensajes_requeridos.clone.to_set
+  def selectores_requeridos
+    @selectores_requeridos.to_set
   end
 
   def tiene_requeridos?
-    !@mensajes_requeridos.empty?
+    !@selectores_requeridos.empty?
   end
 
-  def mensajes_ignorados
+  def selectores_ignorados
     []
   end
 
   def metodos
-    @hash_de_metodos.values.to_set
+    @diccionario_selectores.metodos
   end
 
-  def metodo(un_mensaje)
-    @hash_de_metodos[un_mensaje]
+  def metodo(selector)
+    @diccionario_selectores.metodo_de(selector)
   end
 
 
@@ -67,18 +69,8 @@ class Trait < TraitAbstracto
 
   def mensajes_en_comun(una_clase)
     symbol_methods_class = una_clase.instance_methods
-    symbol_methods_trait = @hash_de_metodos.keys
+    symbol_methods_trait = @diccionario_selectores.keys
     symbol_methods_class.intersection(symbol_methods_trait)
-  end
-
-  def comprobar_requerimientos(una_clase)
-    mensajes_en_clase = una_clase.instance_methods
-    requerimientos = @mensajes_requeridos - mensajes_en_clase
-    puts 'requerimientos'
-    puts requerimientos.empty?
-    unless requerimientos.empty?
-      raise("Faltan los siguientes metoddos requeridos: #{requerimientos}")
-    end
   end
 
 end
