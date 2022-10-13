@@ -28,8 +28,8 @@ class TraitAbstracto
   def ==(un_trait)
     # TODO manejar el caso de cuando se compara un objeto que no sea un trait
     selectores_disponibles == un_trait.selectores_disponibles &&
-      selectores_requeridos == un_trait.selectores_requeridos &&
-      metodos == un_trait.metodos
+    selectores_requeridos == un_trait.selectores_requeridos &&
+    metodos == un_trait.metodos
   end
 
   def selectores_disponibles

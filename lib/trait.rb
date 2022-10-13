@@ -2,7 +2,8 @@ require 'trait_abstracto'
 require 'trait_disminuido'
 require 'trait_compuesto'
 require 'interfaz_de_usuario'
-require 'trait_alias_lala'
+require 'trait_alias'
+require 'convertidos_selector_alias'
 
 class Trait < TraitAbstracto
 
@@ -63,7 +64,7 @@ class Trait < TraitAbstracto
   end
 
   def <<(unos_alias)
-    TraitAliasLala.new(self, unos_alias)
+    TraitAlias.new(self, unos_alias)
   end
 
 
