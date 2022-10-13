@@ -178,7 +178,9 @@ describe 'trait' do
       un_trait = Trait.definir_comportamiento do
       end
 
-      expect{ un_trait - (:m1) }.to raise_error("No se puede restar un selector que no esta contenido en el trait")
+      # mensaje de error que muestra (al menos que se haya cambiado):
+      # No se puede restar un selector que no esta contenido en el trait
+      expect{ un_trait - (:m1) }.to raise_error(TraitDisminuido.mensaje_de_error_en_resta)
     end
 
     it 'Se resta un selector a un trait que define varios metodos  y las instancias responden a los selectores definidos' do

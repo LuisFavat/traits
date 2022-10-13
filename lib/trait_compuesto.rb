@@ -10,20 +10,16 @@ class TraitCompuesto < TraitAbstracto
     @trait_sumando_1.selectores_disponibles + @trait_sumando_2.selectores_disponibles
   end
 
-  def metodos
-    @trait_sumando_1.metodos + @trait_sumando_2.metodos
+  def selectores_ignorados
+    @trait_sumando_1.selectores_ignorados + @trait_sumando_2.selectores_ignorados
   end
 
   def selectores_requeridos
     @trait_sumando_1.selectores_requeridos + @trait_sumando_2.selectores_requeridos
   end
 
-  def tiene_requeridos?
-    !(selectores_requeridos - selectores_disponibles).empty?
-  end
-
-  def selectores_ignorados
-    @trait_sumando_1.selectores_ignorados + @trait_sumando_2.selectores_ignorados
+  def metodos
+    @trait_sumando_1.metodos + @trait_sumando_2.metodos
   end
 
   def metodo(un_selector)
@@ -33,6 +29,10 @@ class TraitCompuesto < TraitAbstracto
       metodo = @trait_sumando_2.metodo(un_selector)
     end
     metodo
+  end
+
+  def tiene_requeridos?
+    !(selectores_requeridos - selectores_disponibles).empty?
   end
 
   def comprobar_conflictos

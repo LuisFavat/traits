@@ -2,6 +2,7 @@ require 'trait_abstracto'
 require 'trait_disminuido'
 require 'trait_compuesto'
 require 'interfaz_de_usuario'
+require 'trait_alias_lala'
 
 class Trait < TraitAbstracto
 
@@ -41,16 +42,12 @@ class Trait < TraitAbstracto
     @hash_de_metodos.keys.to_set
   end
 
-  def selectores_requeridos
-    @selectores_requeridos.clone.to_set
-  end
-
-  def tiene_requeridos?
-    !@selectores_requeridos.empty?
-  end
-
   def selectores_ignorados
     []
+  end
+
+  def selectores_requeridos
+    @selectores_requeridos.clone.to_set
   end
 
   def metodos
@@ -61,6 +58,13 @@ class Trait < TraitAbstracto
     @hash_de_metodos[un_selector]
   end
 
+  def tiene_requeridos?
+    !@selectores_requeridos.empty?
+  end
+
+  def <<(unos_alias)
+    TraitAliasLala.new(self, unos_alias)
+  end
 
 
   private

@@ -14,10 +14,11 @@ class TraitAbstracto
   end
 
   def -(un_selector)
+
     selectores = [un_selector].flatten
     selectores.each do |selector|
       unless selectores_disponibles.include?(selector)
-        raise "No se puede restar un selector que no esta contenido en el trait"
+        raise TraitDisminuido.mensaje_de_error_en_resta
       end
     end
 
