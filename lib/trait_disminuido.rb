@@ -1,4 +1,5 @@
 class TraitDisminuido < TraitAbstracto
+
   def initialize(un_trait, *un_ingnorar_simbolos)
     super()
     @trait = un_trait

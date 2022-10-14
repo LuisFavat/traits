@@ -1,8 +1,4 @@
-require 'trait_abstracto'
-require 'trait_disminuido'
-require 'trait_compuesto'
 require 'diccionario_selectores'
-require 'interfaz_de_usuario'
 
 class Trait < TraitAbstracto
 
@@ -37,6 +33,10 @@ class Trait < TraitAbstracto
     super()
     @diccionario_selectores = diccionario_selectores
     @selectores_requeridos = selectores_requeridos
+  end
+
+  def <<(selector_alias)
+    TraitAlias.new(self, selector_alias)
   end
 
   def selectores_disponibles

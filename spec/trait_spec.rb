@@ -1,5 +1,10 @@
 require 'rspec'
+require 'trait_abstracto'
 require 'trait'
+require 'trait_disminuido'
+require 'trait_compuesto'
+require 'trait_alias'
+require_relative '../lib/interfaz_de_usuario'
 
 describe 'trait' do
   describe 'aplicacion de traits' do
