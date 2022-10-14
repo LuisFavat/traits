@@ -22,10 +22,6 @@ class TraitCompuesto < TraitAbstracto
     !(selectores_requeridos - selectores_disponibles).empty?
   end
 
-  def selectores_ignorados
-    @trait_a.selectores_ignorados + (@trait_b.selectores_ignorados.union)
-  end
-
   def metodo(selector)
     raise SelectorNoDefinido unless define? selector
     return @trait_a.metodo(selector) if @trait_a.define? selector

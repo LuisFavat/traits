@@ -2,9 +2,8 @@ class TraitAbstracto
 
   def aplicarse_en(una_clase)
     comprobar_conflictos
-    selectores_sin_conflicto = (selectores_disponibles - una_clase.instance_methods)
 
-    selectores_sin_conflicto.each do |selector|
+    selectores_aplicables(una_clase).each do |selector|
       una_clase.define_method(selector, metodo(selector))
     end
   end
@@ -22,7 +21,7 @@ class TraitAbstracto
   end
 
   def ==(un_trait)
-    # TODO manejar el caso de cuando se compara un objeto que no sea un trait
+    #return false unless un_trait.kind_of? TraitAbstracto
     selectores_disponibles == un_trait.selectores_disponibles &&
       selectores_requeridos == un_trait.selectores_requeridos &&
       metodos == un_trait.metodos
@@ -33,10 +32,6 @@ class TraitAbstracto
   end
 
   def metodo(selector)
-    raise NotImplementedError
-  end
-
-  def selectores_ignorados
     raise NotImplementedError
   end
 
@@ -51,4 +46,11 @@ class TraitAbstracto
   def comprobar_conflictos
     nil
   end
+
+  private
+
+  def selectores_aplicables(una_clase)
+    selectores_disponibles - una_clase.instance_methods
+  end
+
 end

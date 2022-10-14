@@ -7,7 +7,7 @@ class TraitAlias < TraitAbstracto
   end
 
   def selectores_disponibles
-    @trait.selectores_disponibles + @selector_alias.values
+    @trait.selectores_disponibles + aliases
   end
 
   def metodo(selector)
@@ -15,15 +15,16 @@ class TraitAlias < TraitAbstracto
     @trait.metodo(@selector_alias.key selector)
   end
 
-  def selectores_ignorados
-    raise NotImplementedError
-  end
-
   def selectores_requeridos
-    raise NotImplementedError
+    @trait.selectores_requeridos - aliases
   end
 
   private
+
+  def aliases
+    @selector_alias.values
+  end
+
   def es_alias?(selector)
     @selector_alias.value? selector
   end
