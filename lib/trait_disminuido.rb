@@ -14,6 +14,10 @@ class TraitDisminuido < TraitAbstracto
     @trait.selectores_requeridos
   end
 
+  def tiene_conflicto?
+    @trait.tiene_conflicto? && !son_selectores_ignorados(@trait.selectores_conflictivos)
+  end
+
   def tiene_requeridos?
     @trait.tiene_requeridos?
   end
@@ -24,6 +28,12 @@ class TraitDisminuido < TraitAbstracto
 
   def metodo(selector)
     @trait.metodo(selector)
+  end
+
+  private
+
+  def son_selectores_ignorados(selectores)
+    selectores.all? {|conflictivo| @selectores_ignorados.include? conflictivo}
   end
 end
 

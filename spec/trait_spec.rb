@@ -85,8 +85,7 @@ describe 'trait' do
 
       trait_compuesto = trait_1 + trait_2
 
-      # TODO: revisar esto que esta medio como el culo (el error tiene que ser otro y la logica ni hablar)
-      expect{ trait_compuesto.aplicarse_en(una_clase) }.to raise_error("Conflicto entre traits")
+      expect {trait_compuesto.aplicarse_en(una_clase)}.to raise_error TraitConConflictoError
     end
   end
 

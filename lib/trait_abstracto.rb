@@ -27,6 +27,10 @@ class TraitAbstracto
       metodos == un_trait.metodos
   end
 
+  def define?(selector)
+    selectores_disponibles.include? selector
+  end
+
   def selectores_disponibles
     raise NotImplementedError
   end
@@ -39,15 +43,15 @@ class TraitAbstracto
     raise NotImplementedError
   end
 
-  def define?(selector)
-    selectores_disponibles.include? selector
-  end
-
-  def comprobar_conflictos
-    nil
+  def tiene_conflicto?
+    raise NotImplementedError
   end
 
   private
+
+  def comprobar_conflictos
+    raise TraitConConflictoError if tiene_conflicto?
+  end
 
   def selectores_aplicables(una_clase)
     selectores_disponibles - una_clase.instance_methods

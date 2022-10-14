@@ -1,0 +1,2 @@
+class TraitConConflictoError < StandardError
+end

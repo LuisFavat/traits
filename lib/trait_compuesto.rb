@@ -23,21 +23,17 @@ class TraitCompuesto < TraitAbstracto
   end
 
   def metodo(selector)
-    raise SelectorNoDefinido unless define? selector
     return @trait_a.metodo(selector) if @trait_a.define? selector
-    return @trait_b.metodo(selector) if @trait_b.define? selector
+
+    @trait_b.metodo(selector)
   end
 
-  def comprobar_conflictos
-    mensajes_conflictivos = @trait_a.selectores_disponibles.intersection(@trait_b.selectores_disponibles)
-    unless mensajes_conflictivos.empty?
-      # TODO mostrar los nombres de los traits
-      raise "Conflicto entre traits"
-    end
+  def tiene_conflicto?
+    !selectores_conflictivos.empty? || @trait_a.tiene_conflicto? || @trait_b.tiene_conflicto?
+  end
 
-    @trait_a.comprobar_conflictos
-    @trait_b.comprobar_conflictos
-    nil
+  def selectores_conflictivos
+    @trait_a.selectores_disponibles.intersection @trait_b.selectores_disponibles
   end
 end
 

@@ -50,6 +50,10 @@ class Trait < TraitAbstracto
     !@selectores_requeridos.empty?
   end
 
+  def tiene_conflicto?
+    false
+  end
+
   def selectores_ignorados
     []
   end
