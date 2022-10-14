@@ -23,15 +23,14 @@ class TraitCompuesto < TraitAbstracto
   end
 
   def selectores_ignorados
-    @trait_a.selectores_ignorados + (@trait_b..selectores_ignorados.union)
+    @trait_a.selectores_ignorados + (@trait_b.selectores_ignorados.union)
   end
 
-  def metodo(un_mensaje)
-    metodo = @trait_a.metodo(un_mensaje)
-    if metodo.nil?
-      metodo = @trait_b.metodo(un_mensaje)
-    end
-    metodo
+  def metodo(selector)
+    return @trait_a.metodo(selector) if @trait_a.define? selector
+    return @trait_b.metodo(selector) if @trait_b.define? selector
+
+    raise SelectorNoDefinido
   end
 
   def comprobar_conflictos
@@ -40,6 +39,7 @@ class TraitCompuesto < TraitAbstracto
       # TODO mostrar los nombres de los traits
       raise "Conflicto entre traits"
     end
+
     @trait_a.comprobar_conflictos
     @trait_b.comprobar_conflictos
     nil

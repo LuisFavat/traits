@@ -40,6 +40,10 @@ class TraitAbstracto
     raise NotImplementedError
   end
 
+  def define?(selector)
+    selectores_disponibles.include? selector
+  end
+
   def comprobar_conflictos
     nil
   end

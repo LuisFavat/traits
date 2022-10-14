@@ -1,12 +1,11 @@
 class MetodoTrait
 
-  def initialize(selector, metodo)
-    @selector = selector
+  def initialize(metodo)
     @metodo = metodo
   end
 
   def selector
-    @selector
+    @metodo.name
   end
 
   def metodo

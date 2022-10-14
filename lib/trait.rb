@@ -63,8 +63,6 @@ class Trait < TraitAbstracto
     @diccionario_selectores.metodo_de(selector)
   end
 
-
-
   private
 
   def mensajes_en_comun(una_clase)

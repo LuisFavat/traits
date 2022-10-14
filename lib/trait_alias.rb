@@ -1,6 +1,7 @@
-class TraitAlias
+class TraitAlias < TraitAbstracto
 
   def initialize(trait, selector_alias)
+    super()
     @trait = trait
     @selector_alias = selector_alias
   end
