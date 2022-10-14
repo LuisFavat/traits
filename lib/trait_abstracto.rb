@@ -61,7 +61,7 @@ class TraitAbstracto
   end
 
   def comprobar_conflictos
-    raise NotImplementedError
+    nil
   end
 
   protected
