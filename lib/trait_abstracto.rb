@@ -1,3 +1,5 @@
+require 'trait_con_conflicto_error'
+
 class TraitAbstracto
 
   def aplicarse_en(una_clase)
