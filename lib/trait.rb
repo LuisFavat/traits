@@ -22,8 +22,7 @@ class Trait < TraitAbstracto
 
     diccionario_selectores = DiccionarioSelectores.new
     proveedor_comportamiento.instance_methods(false).each do |selector|
-      #diccionario_selectores[selector] = modulo_con_metodos.instance_method(selector)
-      diccionario_selectores.agregar(selector, proveedor_comportamiento.instance_method(selector))
+      diccionario_selectores.agregar(proveedor_comportamiento.instance_method(selector))
     end
     new(diccionario_selectores, proveedor_comportamiento.selectores_requeridos)
   end

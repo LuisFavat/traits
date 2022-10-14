@@ -32,6 +32,10 @@ class TraitAbstracto
     raise NotImplementedError
   end
 
+  def metodo(selector)
+    raise NotImplementedError
+  end
+
   def selectores_ignorados
     raise NotImplementedError
   end

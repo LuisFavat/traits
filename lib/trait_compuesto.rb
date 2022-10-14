@@ -27,10 +27,9 @@ class TraitCompuesto < TraitAbstracto
   end
 
   def metodo(selector)
+    raise SelectorNoDefinido unless define? selector
     return @trait_a.metodo(selector) if @trait_a.define? selector
     return @trait_b.metodo(selector) if @trait_b.define? selector
-
-    raise SelectorNoDefinido
   end
 
   def comprobar_conflictos

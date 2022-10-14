@@ -6,7 +6,7 @@ class DiccionarioSelectores
     @definiciones = Set.new
   end
 
-  def agregar(selector, metodo)
+  def agregar(metodo)
     @definiciones << MetodoTrait.new(metodo)
   end
 
