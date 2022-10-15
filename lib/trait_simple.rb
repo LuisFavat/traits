@@ -38,7 +38,7 @@ class TraitSimple < Trait
     @diccionario_selectores.selectores
   end
 
-  def metodo(selector)
+  def definicion(selector)
     @diccionario_selectores.metodo_de(selector)
   end
 

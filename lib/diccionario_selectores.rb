@@ -19,7 +19,6 @@ class DiccionarioSelectores
   end
 
   def metodo_de(selector)
-    definicion = @definiciones.find {|definicion| definicion.selector.eql? selector}
-    definicion.metodo
+    @definiciones.find {|definicion| definicion.selector.eql? selector}
   end
 end

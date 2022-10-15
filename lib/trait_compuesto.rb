@@ -22,10 +22,10 @@ class TraitCompuesto < Trait
     @trait_a.selectores_disponibles + @trait_b.selectores_disponibles
   end
 
-  def metodo(selector)
-    return @trait_a.metodo(selector) if @trait_a.define? selector
+  def definicion(selector)
+    return @trait_a.definicion(selector) if @trait_a.define? selector
 
-    @trait_b.metodo(selector)
+    @trait_b.definicion(selector)
   end
 
   def selectores_requeridos

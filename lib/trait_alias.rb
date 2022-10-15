@@ -10,9 +10,9 @@ class TraitAlias < Trait
     @trait.selectores_disponibles + aliases
   end
 
-  def metodo(selector)
-    return @trait.metodo selector unless es_alias? selector
-    @trait.metodo(@selector_alias.key selector)
+  def definicion(selector)
+    return @trait.definicion selector unless es_alias? selector
+    @trait.definicion(@selector_alias.key selector)
   end
 
   def selectores_requeridos

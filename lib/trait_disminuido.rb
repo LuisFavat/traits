@@ -10,8 +10,9 @@ class TraitDisminuido < Trait
     @trait.selectores_disponibles - @selectores_ignorados
   end
 
-  def metodo(selector)
-    @trait.metodo(selector)
+  def definicion(selector)
+    #Para dar consistencia al modelo no deberia devolver un metodo si se le pide de un selector ignorado
+    @trait.definicion(selector)
   end
 
   def selectores_requeridos

@@ -7,7 +7,7 @@ class Trait
     comprobar_conflictos
 
     selectores_aplicables(una_clase).each do |selector|
-      una_clase.define_method(selector, metodo(selector))
+      una_clase.define_method(selector, definicion(selector).metodo)
     end
   end
 
@@ -48,7 +48,7 @@ class Trait
     raise NotImplementedError
   end
 
-  def metodo(selector)
+  def definicion(selector)
     raise NotImplementedError
   end
 
