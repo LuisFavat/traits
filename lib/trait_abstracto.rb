@@ -34,7 +34,9 @@ class TraitAbstracto
   end
 
   def ==(un_trait)
-    # TODO manejar el caso de cuando se compara un objeto que no sea un trait
+    unless un_trait.class.superclass == TraitAbstracto
+      return false
+    end
     selectores_disponibles == un_trait.selectores_disponibles &&
     selectores_requeridos == un_trait.selectores_requeridos &&
     metodos == un_trait.metodos

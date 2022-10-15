@@ -365,10 +365,12 @@ describe 'trait' do
       expect(trait_1 + trait_3).not_to eq(trait_1 + trait_2)
     end
 
-    it 'should dsaf' do
+    it 'Un trait y otro objeto distinto a un trait no son iguales' do
       un_trait = Trait.debe do
-        
       end
+      objeto = Class.new.new
+
+      expect(un_trait == objeto).to eq(false)
     end
   end
 
@@ -610,6 +612,7 @@ describe 'trait' do
     end
 
     it 'Al definir un alias a un trait con requerimientos, el alias no puede ser igual al de un requerimiento' do
+      # Preparacion
       un_trait = Trait.debe do
         requiere :m2
         def m1
@@ -617,6 +620,7 @@ describe 'trait' do
         end
       end
 
+      # Ejercitacion # Verificacion
       expect{un_trait << { m1: :m2 }}.to raise_error("El alias no puede ser igual a un requerido")
     end
   end
