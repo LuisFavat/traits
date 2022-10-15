@@ -35,11 +35,10 @@ class TraitCompuesto < TraitAbstracto
 
   def comprobar_conflictos
     selectores_conflictivos = @trait_a.selectores_disponibles.intersection(@trait_b.selectores_disponibles)
-    hay_conflicto = false
 
     unless selectores_conflictivos.empty?
-      selectores_conflictivos.each do |selector|
-        hay_conflicto ||= (@trait_a.metodo(selector) != @trait_b.metodo(selector))
+      hay_conflicto = selectores_conflictivos.any? do |selector|
+        (@trait_a.metodo(selector) != @trait_b.metodo(selector))
       end
 
       if hay_conflicto
