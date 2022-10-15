@@ -11,7 +11,7 @@ class Trait < TraitAbstracto
   def self.debe(&bloque_de_metodos)
     modulo_plus = requerimientos_en_modulos
     hash_de_metodos = extraer_metodos(modulo_plus, &bloque_de_metodos)
-    new(hash_de_metodos, modulo_plus.selectores_requeridos)
+    Trait.new(hash_de_metodos, modulo_plus.selectores_requeridos)
   end
 
   def self.requerimientos_en_modulos()
@@ -64,10 +64,6 @@ class Trait < TraitAbstracto
 
   def metodo(un_selector)
     @hash_de_metodos[un_selector]
-  end
-
-  def tiene_requeridos?
-    !@selectores_requeridos.empty?
   end
 
   private

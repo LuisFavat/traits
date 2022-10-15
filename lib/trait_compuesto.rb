@@ -2,46 +2,44 @@ class TraitCompuesto < TraitAbstracto
 
   def initialize(un_trait_a, un_trait_b)
     super()
-    @trait_sumando_1 = un_trait_a
-    @trait_sumando_2 = un_trait_b
+    @trait_a = un_trait_a
+    @trait_b = un_trait_b
   end
 
   def selectores_disponibles
-    @trait_sumando_1.selectores_disponibles + @trait_sumando_2.selectores_disponibles
+    @trait_a.selectores_disponibles + @trait_b.selectores_disponibles
   end
 
   def selectores_ignorados
-    @trait_sumando_1.selectores_ignorados + @trait_sumando_2.selectores_ignorados
+    @trait_a.selectores_ignorados + @trait_b.selectores_ignorados
   end
 
   def selectores_requeridos
-    @trait_sumando_1.selectores_requeridos + @trait_sumando_2.selectores_requeridos
+    requeridos_insatisfechos_a = @trait_a.selectores_requeridos - @trait_b.selectores_disponibles
+    requeridos_insatisfechos_b = @trait_b.selectores_requeridos - @trait_a.selectores_disponibles
+    requeridos_insatisfechos_a + requeridos_insatisfechos_b
   end
 
   def metodos
-    @trait_sumando_1.metodos + @trait_sumando_2.metodos
+    @trait_a.metodos + @trait_b.metodos
   end
 
   def metodo(un_selector)
     # TODO aca puede haber conflictos??? como se resuelve? le paso el trait del que quiero el metodo???
-    metodo = @trait_sumando_1.metodo(un_selector)
+    metodo = @trait_a.metodo(un_selector)
     if metodo.nil?
-      metodo = @trait_sumando_2.metodo(un_selector)
+      metodo = @trait_b.metodo(un_selector)
     end
     metodo
   end
 
-  def tiene_requeridos?
-    !(selectores_requeridos - selectores_disponibles).empty?
-  end
-
   def comprobar_conflictos
-    selectores_conflictivos = @trait_sumando_1.selectores_disponibles.intersection(@trait_sumando_2.selectores_disponibles)
+    selectores_conflictivos = @trait_a.selectores_disponibles.intersection(@trait_b.selectores_disponibles)
     hay_conflicto = false
 
     unless selectores_conflictivos.empty?
       selectores_conflictivos.each do |selector|
-        hay_conflicto ||= (@trait_sumando_1.metodo(selector) != @trait_sumando_2.metodo(selector))
+        hay_conflicto ||= (@trait_a.metodo(selector) != @trait_b.metodo(selector))
       end
 
       if hay_conflicto

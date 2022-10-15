@@ -25,8 +25,12 @@ class TraitAbstracto
     TraitDisminuido.new(self, selectores)
   end
 
-  def <<(unos_alias)
-    TraitAlias.new(self, unos_alias)
+  def <<(hash_de_alias)
+    unos_alias = hash_de_alias.values
+    if selectores_requeridos.any?{|requerido| unos_alias.include?requerido}
+      raise "El alias no puede ser igual a un requerido"
+    end
+    TraitAlias.new(self, hash_de_alias)
   end
 
   def ==(un_trait)
@@ -53,10 +57,6 @@ class TraitAbstracto
   end
 
   def metodo(un_selector)
-    raise NotImplementedError
-  end
-
-  def tiene_requeridos?
     raise NotImplementedError
   end
 

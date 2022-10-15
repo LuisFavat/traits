@@ -15,6 +15,8 @@ class TraitDisminuido < TraitAbstracto
   end
 
   def selectores_requeridos
+    #Si se borra un metodo con requerimiento, el requerimiento no se borra solo
+    # (el requerimiento deberia estar vinculado al metodo que lo requiere)
     @trait.selectores_requeridos
   end
 
@@ -24,10 +26,6 @@ class TraitDisminuido < TraitAbstracto
 
   def metodo(un_selector)
     @trait.metodo(un_selector)
-  end
-
-  def tiene_requeridos?
-    @trait.tiene_requeridos?
   end
 
   # Metodos de clase
