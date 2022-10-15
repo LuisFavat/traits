@@ -151,7 +151,7 @@ describe 'trait' do
     end
   end
 
-  describe 'Algebra' do
+  describe 'operaciones' do
 
     it 'Se resta un selector a un trait y las *instancias no responden al mismo' do
       # Preparacion
@@ -297,7 +297,7 @@ describe 'trait' do
      expect(instancia.m3).to eq('m3')
     end
 
-    it 'asdasd' do
+    it 'asdasd este test debe fallar porque tiene conflictos' do
       # Preparacion
       trait_1 = Trait.debe do
         def m1
@@ -365,11 +365,41 @@ describe 'trait' do
       expect(trait_1 + trait_3).not_to eq(trait_1 + trait_2)
     end
 
+    it 'Al restar un selector a un trait, ya no es igual al trait original' do
+      # Preparacion
+      un_trait = Trait.debe do
+        def m1
+          "metodo m1"
+        end
+      end
+
+      # Ejercitacion
+      trait_disminuido = un_trait - :m1
+
+      # Verificacion
+      expect(trait_disminuido == un_trait).to eq(false)
+    end
+
+    it 'Al generar un alias para un trait, el trait resultante ya no es igual al trait original' do
+      # Preparacion
+      un_trait = Trait.debe do
+        def m1
+          "metodo m1"
+        end
+      end
+
+      # Ejercitacion
+      trait_alias = un_trait << {m1: :m2}
+
+      # Verificacion
+      expect(trait_alias == un_trait).to eq(false)
+    end
     it 'Un trait y otro objeto distinto a un trait no son iguales' do
       un_trait = Trait.debe do
       end
       objeto = Class.new.new
 
+      # Ejercitacion # Verificacion
       expect(un_trait == objeto).to eq(false)
     end
   end
@@ -513,6 +543,19 @@ describe 'trait' do
 
       # Verificacion
       expect(trait_combinado.selectores_requeridos == Set[:m3, :m4]).to eq( true )
+    end
+
+    it 'Al borrar un metodo con requerimientos, se pierden los requerimientos' do
+      un_trait = Trait.debe do
+        requiere :m2
+        def m1
+          m2
+        end
+      end
+
+      trait_sin_m1 = un_trait - :m1
+
+      expect(trait_sin_m1.selectores_requeridos).to eq(Set[])
     end
   end
 

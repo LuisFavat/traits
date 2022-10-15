@@ -65,16 +65,4 @@ class Trait < TraitAbstracto
   def metodo(un_selector)
     @hash_de_metodos[un_selector]
   end
-
-  private
-
-  def comprobar_requerimientos(una_clase)
-    selectores_de_instancia = una_clase.instance_methods
-    requerimientos = @selectores_requeridos - selectores_de_instancia
-
-    unless requerimientos.empty?
-      raise("Faltan los siguientes metoddos requeridos: #{requerimientos}")
-    end
-  end
-
 end

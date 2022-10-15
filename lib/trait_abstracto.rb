@@ -66,7 +66,6 @@ class TraitAbstracto
     nil
   end
 
-  protected
   def selectores_sin_conflicto(una_clase)
     selectores_disponibles - una_clase.instance_methods
   end

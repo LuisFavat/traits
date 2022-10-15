@@ -55,4 +55,5 @@ class TraitAlias < TraitAbstracto
     end
     alias_conmutado
   end
+
 end
