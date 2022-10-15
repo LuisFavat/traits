@@ -34,10 +34,6 @@ class TraitAlias < TraitAbstracto
     @trait.comprobar_conflictos
   end
 
-  def contiene?(un_alias)
-    @alias_selectores.keys.include?(un_alias)
-  end
-
   def alias_a_selector(un_alias)
     @alias_selectores[un_alias]
   end

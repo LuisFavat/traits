@@ -183,6 +183,23 @@ describe 'trait' do
       expect{ un_trait - (:m1) }.to raise_error(TraitDisminuido.mensaje_de_error_en_resta)
     end
 
+    it 'Los metodos asociados a un trait se consevan a pesar de la operacion que se le efectua' do
+      un_trait = Trait.debe do
+        def m1
+          "m1"
+        end
+      end
+
+      trait_disminuido = un_trait - :m1
+      trait_alias = un_trait << {m1: :m2}
+      trait_compuesto = un_trait + un_trait
+
+      expect(trait_disminuido.metodos).to eq(un_trait.metodos)
+      expect(trait_alias.metodos).to eq(un_trait.metodos)
+      expect(trait_compuesto.metodos).to eq(un_trait.metodos)
+    end
+
+
     it 'Se resta un selector a un trait que define varios metodos  y las instancias responden a los selectores definidos' do
       # Preparacion
       un_trait = Trait.debe do
@@ -377,7 +394,7 @@ describe 'trait' do
       trait_disminuido = un_trait - :m1
 
       # Verificacion
-      expect(trait_disminuido == un_trait).to eq(false)
+      expect(un_trait == trait_disminuido).to eq(false)
     end
 
     it 'Al generar un alias para un trait, el trait resultante ya no es igual al trait original' do
@@ -392,7 +409,7 @@ describe 'trait' do
       trait_alias = un_trait << {m1: :m2}
 
       # Verificacion
-      expect(trait_alias == un_trait).to eq(false)
+      expect(un_trait == trait_alias).to eq(false)
     end
     it 'Un trait y otro objeto distinto a un trait no son iguales' do
       un_trait = Trait.debe do
@@ -664,7 +681,18 @@ describe 'trait' do
       end
 
       # Ejercitacion # Verificacion
-      expect{un_trait << { m1: :m2 }}.to raise_error("El alias no puede ser igual a un requerido")
+      expect{un_trait << { m1: :m2 }}.to raise_error("El alias no puede ser igual a un selector requerido")
+    end
+
+    it 'Un trait no puede tener como alias un selector en uso' do
+      un_trait = Trait.debe do
+        def m1
+          "m1"
+        end
+      end
+
+      expect { un_trait << {m1: :m1}}.to raise_error("El alias no puede ser igual a un selector disponible")
+
     end
   end
 

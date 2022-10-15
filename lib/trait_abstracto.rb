@@ -28,8 +28,12 @@ class TraitAbstracto
   def <<(hash_de_alias)
     unos_alias = hash_de_alias.values
     if selectores_requeridos.any?{|requerido| unos_alias.include?requerido}
-      raise "El alias no puede ser igual a un requerido"
+      raise "El alias no puede ser igual a un selector requerido"
     end
+    if selectores_disponibles.any?{|requerido| unos_alias.include?requerido}
+      raise "El alias no puede ser igual a un selector disponible"
+    end
+
     TraitAlias.new(self, hash_de_alias)
   end
 
@@ -41,7 +45,7 @@ class TraitAbstracto
     selectores_requeridos == un_trait.selectores_requeridos &&
     metodos == un_trait.metodos
   end
-
+=begin
   def selectores_disponibles
     raise NotImplementedError
   end
@@ -61,7 +65,7 @@ class TraitAbstracto
   def metodo(un_selector)
     raise NotImplementedError
   end
-
+=end
   def comprobar_conflictos
     nil
   end
