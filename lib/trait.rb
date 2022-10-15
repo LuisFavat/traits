@@ -8,10 +8,14 @@ require 'trait_alias'
 class Trait < TraitAbstracto
 
   # metodos de clase
-  def self.definir_comportamiento(&bloque_de_metodos)
+  def self.debe(&bloque_de_metodos)
+    modulo_plus = requerimientos_en_modulos
+    hash_de_metodos = extraer_metodos(modulo_plus, &bloque_de_metodos)
+    new(hash_de_metodos, modulo_plus.selectores_requeridos)
+  end
 
-    modulo_con_metodos = Module.new {
-
+  def self.requerimientos_en_modulos()
+    Module.new {
       @selectores_requeridos = []
 
       def self.requiere(*un_selector)
@@ -23,13 +27,16 @@ class Trait < TraitAbstracto
         @selectores_requeridos
       end
     }
+  end
+
+  def self.extraer_metodos(modulo_con_metodos, &bloque_de_metodos)
     modulo_con_metodos.class_exec(&bloque_de_metodos)
 
     hash_de_metodos = {}
     modulo_con_metodos.instance_methods(false).each do |selector|
       hash_de_metodos[selector] = modulo_con_metodos.instance_method(selector)
     end
-    new(hash_de_metodos, modulo_con_metodos.selectores_requeridos)
+    hash_de_metodos
   end
   
   # metodos de instancia

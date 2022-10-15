@@ -1,10 +1,8 @@
 class TraitAlias < TraitAbstracto
 
   def initialize(un_trait, unos_alias)
-    super()
     @trait = un_trait
     @alias_selectores = conmutar_keys_y_values(unos_alias)
-
   end
 
   def selectores_disponibles
