@@ -1,6 +1,6 @@
 require 'rspec'
-require 'trait_abstracto'
 require 'trait'
+require 'trait_simple'
 require 'trait_disminuido'
 require 'trait_compuesto'
 require 'trait_alias'
