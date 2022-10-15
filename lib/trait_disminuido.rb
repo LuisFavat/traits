@@ -10,34 +10,28 @@ class TraitDisminuido < TraitAbstracto
     @trait.selectores_disponibles - @selectores_ignorados
   end
 
+  def metodo(selector)
+    @trait.metodo(selector)
+  end
+
   def selectores_requeridos
     @trait.selectores_requeridos
-  end
-
-  def tiene_conflicto?
-    @trait.tiene_conflicto? && !son_selectores_ignorados(@trait.selectores_conflictivos)
-  end
-
-  def tiene_requeridos?
-    @trait.tiene_requeridos?
   end
 
   def metodos
     @trait.metodos - metodos_ignorados
   end
 
-  def metodo(selector)
-    @trait.metodo(selector)
+  def selectores_conflictivos
+    @trait.selectores_conflictivos - @selectores_ignorados
   end
 
   private
 
-  def son_selectores_ignorados(selectores)
-    selectores.all? {|conflictivo| @selectores_ignorados.include? conflictivo}
-  end
-
   def metodos_ignorados
     @trait.metodos.select {|metodo| @selectores_ignorados.include? metodo.name}
+    #Me genera dudas enviar el mensaje name ¿Deberia ser una definicion de metodo al que mande el mensaje "metodo"?
+    # la duda surge porque parece ser una mezcla de niveles de abstraccion
   end
 end
 

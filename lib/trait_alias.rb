@@ -19,16 +19,17 @@ class TraitAlias < TraitAbstracto
     @trait.selectores_requeridos - aliases
   end
 
-  def tiene_requeridos?
-    !selectores_requeridos.empty?
+  def metodos
+    @trait.metodos
   end
 
-  def tiene_conflicto?
-    @trait.tiene_conflicto?
+  def selectores_conflictivos
+    @trait.selectores_conflictivos
   end
 
   private
 
+  #Nombre horrible, pensar alguno mejor
   def aliases
     @selector_alias.values
   end

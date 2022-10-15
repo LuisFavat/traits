@@ -38,24 +38,20 @@ class Trait < TraitAbstracto
     @diccionario_selectores.selectores
   end
 
+  def metodo(selector)
+    @diccionario_selectores.metodo_de(selector)
+  end
+
   def selectores_requeridos
     @selectores_requeridos.to_set
-  end
-
-  def tiene_requeridos?
-    !@selectores_requeridos.empty?
-  end
-
-  def tiene_conflicto?
-    false
   end
 
   def metodos
     @diccionario_selectores.metodos
   end
 
-  def metodo(selector)
-    @diccionario_selectores.metodo_de(selector)
+  def selectores_conflictivos
+    Set.new
   end
 
 end

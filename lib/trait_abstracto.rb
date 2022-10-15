@@ -25,15 +25,23 @@ class TraitAbstracto
   end
 
   def ==(un_trait)
-    #return false unless un_trait.kind_of? TraitAbstracto
+    return false unless un_trait.kind_of? TraitAbstracto
     selectores_disponibles == un_trait.selectores_disponibles &&
       selectores_requeridos == un_trait.selectores_requeridos &&
       metodos == un_trait.metodos
   end
 
   def define?(selector)
-    selectores_a_verificar = [selector].flatten
+    selectores_a_verificar = [selector].flatten #esto esta asi porque se utiliza para validar la resta
     selectores_a_verificar.all? {|selector_a_verificar| selectores_disponibles.include? selector_a_verificar}
+  end
+
+  def tiene_requeridos?
+    !selectores_requeridos.empty?
+  end
+
+  def tiene_conflicto?
+    !selectores_conflictivos.empty?
   end
 
   def selectores_disponibles
@@ -48,11 +56,11 @@ class TraitAbstracto
     raise NotImplementedError
   end
 
-  def tiene_requeridos?
+  def metodos
     raise NotImplementedError
   end
 
-  def tiene_conflicto?
+  def selectores_conflictivos
     raise NotImplementedError
   end
 

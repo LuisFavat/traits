@@ -173,14 +173,16 @@ describe 'trait' do
   end
 
   describe 'Algebra' do
-    it 'No se puede restar un selector a un trait si no lo define' do
+    it 'Los traits saben diferenciarse de aquello que no son traits' do
       un_trait = Trait.definir_comportamiento do
         def m1
-          'hola trait'
+          "m1"
         end
       end
 
-      expect{ un_trait - :m2 }.to raise_error NoDefineSelector
+      expect(un_trait).not_to eq("algo que no es un trait")
+      expect(un_trait).not_to eq(2)
+      expect(un_trait).not_to eq(nil)
     end
 
     it 'Dos traits con los mismos selectores no son iguales si estan asociados a metodos distintos' do
@@ -203,7 +205,48 @@ describe 'trait' do
       trait_operado = (un_trait - :m2) + otro_trait
 
       expect(un_trait.selectores_disponibles).to eq(trait_operado.selectores_disponibles)
+      expect(un_trait.selectores_requeridos).to eq(trait_operado.selectores_requeridos)
+      expect(un_trait.metodos).not_to eq(trait_operado.metodos)
       expect(un_trait).not_to eq(trait_operado)
+    end
+
+    #TODO: tener en cuenta este caso porque demuestra la potencia del modelo alcanzado
+=begin
+    it 'Dos traits con los mismos metodos y selectores pero distintos requeridos son distintos' do
+      un_trait = Trait.definir_comportamiento do
+        requiere :m3
+        def m1
+          self.m3
+        end
+
+        def m2
+          "m2"
+        end
+      end
+
+      otro_trait = Trait.definir_comportamiento do
+        def m3
+          "m3"
+        end
+      end
+
+      trait_operado = (un_trait + otro_trait) - :m3
+
+      expect(un_trait.selectores_disponibles).to eq(trait_operado.selectores_disponibles)
+      expect(un_trait.metodos).to eq(trait_operado.metodos)
+      expect(un_trait.selectores_requeridos).not_to eq(trait_operado.selectores_requeridos)
+      expect(un_trait).not_to eq(trait_operado)
+    end
+=end
+
+    it 'No se puede restar un selector a un trait si no lo define' do
+      un_trait = Trait.definir_comportamiento do
+        def m1
+          'hola trait'
+        end
+      end
+
+      expect{ un_trait - :m2 }.to raise_error NoDefineSelector
     end
 
     it 'Se resta un selector a un trait y las instancias de la clase donde se aplica no responden al mismo' do
@@ -493,8 +536,20 @@ describe 'trait' do
 
   describe 'Alias de mensajes' do
 
-    it 'Se define un alias para un selector de un trait y se conservan ambos asociados al mismo metodo' do
+    it 'Dar un alias a un selector de un trait cambia los selectores disponibles pero no los metodos definidos' do
+      un_trait = Trait.definir_comportamiento do
+        def mensaje
+          'este es mensaje'
+        end
+      end
 
+      trait_alias = un_trait << {mensaje: :otro_mensaje}
+
+      expect(un_trait.metodos).to eq(trait_alias.metodos)
+      expect(un_trait.selectores_disponibles).not_to eq(trait_alias.selectores_disponibles)
+    end
+
+    it 'Se define un alias para un selector de un trait y se conservan ambos asociados al mismo metodo' do
       un_trait = Trait.definir_comportamiento do
         def mensaje
           'este es mensaje'
