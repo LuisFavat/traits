@@ -1,6 +1,7 @@
 class TraitAlias < TraitAbstracto
 
   def initialize(un_trait, unos_alias)
+    super()
     @trait = un_trait
     @alias_selectores = conmutar_keys_y_values(unos_alias)
   end
@@ -30,16 +31,16 @@ class TraitAlias < TraitAbstracto
     @trait.metodo(selector)
   end
 
-  def comprobar_conflictos
-    @trait.comprobar_conflictos
-  end
-
   def alias_a_selector(un_alias)
     @alias_selectores[un_alias]
   end
 
   def todos_los_alias
     @alias_selectores.keys
+  end
+
+  def comprobar_conflictos
+    @trait.comprobar_conflictos
   end
 
   private

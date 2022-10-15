@@ -314,7 +314,7 @@ describe 'trait' do
      expect(instancia.m3).to eq('m3')
     end
 
-    it 'asdasd este test debe fallar porque tiene conflictos' do
+    it 'Se comprueba conflictos al aplicarse un trait complejo' do
       # Preparacion
       trait_1 = Trait.debe do
         def m1
@@ -333,15 +333,12 @@ describe 'trait' do
       end
 
       una_clase = Class.new
-      instancia = una_clase.new
 
       # Ejercitacion
-      trait_compuesto = (trait_1 + trait_2) - :m2
-      otro = (trait_1 + trait_2) << {m2: :m3}
+      trait_compuesto = ((trait_1 + trait_2) - :m2) << {m2: :m3}
 
-      trait_compuesto.aplicarse_en(una_clase)
-      #otro.aplicarse_en(una_clase)
-
+      # Verificacion
+      expect{trait_compuesto.aplicarse_en(una_clase)}.to raise_error("Conflicto entre traits")
     end
 
     it 'La combinacion de traits es asociativa, conmutable e idempotente' do

@@ -65,4 +65,8 @@ class Trait < TraitAbstracto
   def metodo(un_selector)
     @hash_de_metodos[un_selector]
   end
+
+  def comprobar_conflictos
+  end
+
 end

@@ -28,6 +28,8 @@ class TraitDisminuido < TraitAbstracto
     @trait.metodo(un_selector)
   end
 
+
+
   # Metodos de clase
   def self.mensaje_de_error_en_resta
     "No se puede restar un selector que no esta contenido en el trait"

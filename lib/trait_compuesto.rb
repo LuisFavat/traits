@@ -47,7 +47,7 @@ class TraitCompuesto < TraitAbstracto
         raise "Conflicto entre traits"
       end
     end
-    nil
   end
+
 end
 
