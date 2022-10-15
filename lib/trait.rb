@@ -34,10 +34,6 @@ class Trait < TraitAbstracto
     @selectores_requeridos = selectores_requeridos
   end
 
-  def <<(selector_alias)
-    TraitAlias.new(self, selector_alias)
-  end
-
   def selectores_disponibles
     @diccionario_selectores.selectores
   end
@@ -54,24 +50,12 @@ class Trait < TraitAbstracto
     false
   end
 
-  def selectores_ignorados
-    []
-  end
-
   def metodos
     @diccionario_selectores.metodos
   end
 
   def metodo(selector)
     @diccionario_selectores.metodo_de(selector)
-  end
-
-  private
-
-  def mensajes_en_comun(una_clase)
-    symbol_methods_class = una_clase.instance_methods
-    symbol_methods_trait = @diccionario_selectores.keys
-    symbol_methods_class.intersection(symbol_methods_trait)
   end
 
 end

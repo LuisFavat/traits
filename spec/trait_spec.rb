@@ -7,7 +7,7 @@ require 'trait_alias'
 require_relative '../lib/interfaz_de_usuario'
 
 describe 'trait' do
-  describe 'aplicacion de traits' do
+  describe 'Aplicacion de traits' do
     it 'Se aplica un trait a una clase y sus intancias responden a los selectores definidos por el trait' do
       un_trait = Trait.definir_comportamiento do
         def m1
@@ -68,7 +68,7 @@ describe 'trait' do
       expect(instancia.m1).to eq('m1 de superclase')
     end
 
-    it 'Al combinar traits que tienen un mismo selector y querer aplicarlo se lanza una excepción' do
+    it 'No se puede aplicar un trait del resultado de combinar dos traits con un selector en comun' do
       trait_1 =  Trait.definir_comportamiento do
         def m1
           "metodo m1"
@@ -89,7 +89,123 @@ describe 'trait' do
     end
   end
 
+  describe 'Conflictos' do
+    it 'Combinar dos traits que tienen un selector en comun genera un conflicto' do
+      trait_1 =  Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+
+      trait_2 = Trait.definir_comportamiento do
+        def m1
+          "otro metodo m1"
+        end
+      end
+
+      trait_compuesto = trait_1 + trait_2
+
+      expect(trait_compuesto.tiene_conflicto?).to be(true)
+    end
+
+    it 'Al combinar un trait conflictivo con otro el resultante tiene conflicto' do
+      trait_1 =  Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+
+      trait_2 = Trait.definir_comportamiento do
+        def m1
+          "otro metodo m1"
+        end
+      end
+
+      trait_3 = Trait.definir_comportamiento do
+        def m2
+          "metodo m2"
+        end
+      end
+
+      trait_compuesto = (trait_1 + trait_2) + trait_3
+      otro_trait_compuesto = trait_3 + (trait_1 + trait_2)
+
+      expect(trait_compuesto.tiene_conflicto?).to be(true)
+      expect(otro_trait_compuesto.tiene_conflicto?).to be(true)
+    end
+
+    it 'A un trait conflictivo se le resta el selector del conflicto y se resuelve' do
+      trait_1 =  Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+
+      trait_2 = Trait.definir_comportamiento do
+        def m1
+          "otro metodo m1"
+        end
+      end
+
+      trait_compuesto = (trait_1 + trait_2) - :m1
+
+      expect(trait_compuesto.tiene_conflicto?).to be(false)
+    end
+
+    it 'Dar un alias a un selector conflictivo no resuelve el conflicto' do
+      trait_1 =  Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+
+      trait_2 = Trait.definir_comportamiento do
+        def m1
+          "otro metodo m1"
+        end
+      end
+
+      trait_alias = (trait_1 + trait_2) << { m1: :m2 }
+
+      expect(trait_alias.tiene_conflicto?).to be(true)
+    end
+
+  end
+
   describe 'Algebra' do
+    it 'No se puede restar un selector a un trait si no lo define' do
+      un_trait = Trait.definir_comportamiento do
+        def m1
+          'hola trait'
+        end
+      end
+
+      expect{ un_trait - :m2 }.to raise_error NoDefineSelector
+    end
+
+    it 'Dos traits con los mismos selectores no son iguales si estan asociados a metodos distintos' do
+      un_trait = Trait.definir_comportamiento do
+        def m1
+          "m1"
+        end
+
+        def m2
+          "m2"
+        end
+      end
+
+      otro_trait = Trait.definir_comportamiento do
+        def m2
+          "m2"
+        end
+      end
+
+      trait_operado = (un_trait - :m2) + otro_trait
+
+      expect(un_trait.selectores_disponibles).to eq(trait_operado.selectores_disponibles)
+      expect(un_trait).not_to eq(trait_operado)
+    end
+
     it 'Se resta un selector a un trait y las instancias de la clase donde se aplica no responden al mismo' do
       un_trait = Trait.definir_comportamiento do
         def m1
@@ -196,7 +312,7 @@ describe 'trait' do
      expect(instancia.m3).to eq('m3')
    end
 
-    it 'La combinacion de traits es asociativa, conmutable e idempotente' do
+    it 'La combinacion de traits es asociativa, conmutativa e idempotente' do
       trait_1 = Trait.definir_comportamiento do
         def m1
           'm1'
@@ -226,7 +342,17 @@ describe 'trait' do
     end
   end
 
-  describe 'requeridos' do
+  describe 'Requeridos' do
+    it 'Un trait puede no tener metodos requeridos' do
+      un_trait = Trait.definir_comportamiento do
+        def m1
+          "metodo m1"
+        end
+      end
+
+      expect(un_trait.tiene_requeridos?).to be(false)
+    end
+
     it 'Al aplicarse un trait con requeridos no satisfechos y llamar al selector de una instancia de la clase que lo
         aplica falla' do
       un_trait = Trait.definir_comportamiento do
@@ -241,28 +367,55 @@ describe 'trait' do
 
       un_trait.aplicarse_en(una_clase)
 
+      expect(un_trait.tiene_requeridos?).to be(true)
       expect { instancia.m1 }.to raise_error(NoMethodError)
     end
 
-    it 'Al aplicarse un trait con requeridos a una clase que define el selector se invoca correctamente por la instancia' do
+    it 'Eliminar un selector no genera cambios respecto a los requeridos de un trait' do
       un_trait = Trait.definir_comportamiento do
         requiere :m2
         def m1
-          m2
+          self.m2
+        end
+
+        def m3
+          "m3"
         end
       end
 
-      una_clase = Class.new do
-        def m2
-          'm2'
-        end
-      end
+      trait_operado = un_trait - :m3
 
+      una_clase = Class.new
       instancia = una_clase.new
 
-      un_trait.aplicarse_en(una_clase)
+      trait_operado.aplicarse_en(una_clase)
 
-      expect(instancia.m1).to eq('m2')
+      expect(trait_operado.tiene_requeridos?).to be(true)
+      expect { instancia.m1 }.to raise_error(NoMethodError)
+    end
+
+    it 'Combinar dos traits con requeridos hace que el resultante conserve los requeridos de ambos' do
+      un_trait = Trait.definir_comportamiento do
+        requiere :m2
+        def m1
+          self.m2
+        end
+
+        def m3
+          "m3"
+        end
+      end
+
+      otro_trait = Trait.definir_comportamiento do
+        requiere :m4
+        def m5
+          self.m4
+        end
+      end
+
+      trait_combinado = (un_trait -:m3) + otro_trait
+
+      expect(trait_combinado.selectores_requeridos).to eq(Set.new([:m2, :m4]))
     end
 
     it 'Al combinarse un trait con requeridos con otro que define el selector el trait resultante no conserva el requerimiento' do
@@ -313,9 +466,32 @@ describe 'trait' do
       expect { instancia.m1 }.to raise_error(NoMethodError)
       expect(trait_combinado.tiene_requeridos?).to be(true)
     end
+
+    it 'Definir un alias con un selector requerido satisface el requerimiento' do
+      trait_1 = Trait.definir_comportamiento do
+        requiere :m2
+        def m1
+          self.m2
+        end
+
+        def m3
+          "m3"
+        end
+      end
+
+      una_clase = Class.new
+      instancia = una_clase.new
+
+      trait_alias = trait_1 << {m3: :m2}
+      trait_alias.aplicarse_en(una_clase)
+
+      expect(trait_alias.tiene_requeridos?).to be(false)
+      expect(instancia.m2).to eq("m3")
+    end
+
   end
 
-  describe 'alias de mensajes' do
+  describe 'Alias de mensajes' do
 
     it 'Se define un alias para un selector de un trait y se conservan ambos asociados al mismo metodo' do
 

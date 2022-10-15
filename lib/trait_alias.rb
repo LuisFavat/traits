@@ -19,6 +19,10 @@ class TraitAlias < TraitAbstracto
     @trait.selectores_requeridos - aliases
   end
 
+  def tiene_requeridos?
+    !selectores_requeridos.empty?
+  end
+
   def tiene_conflicto?
     @trait.tiene_conflicto?
   end

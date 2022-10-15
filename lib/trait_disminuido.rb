@@ -23,7 +23,7 @@ class TraitDisminuido < TraitAbstracto
   end
 
   def metodos
-    @trait.metodos
+    @trait.metodos - metodos_ignorados
   end
 
   def metodo(selector)
@@ -34,6 +34,10 @@ class TraitDisminuido < TraitAbstracto
 
   def son_selectores_ignorados(selectores)
     selectores.all? {|conflictivo| @selectores_ignorados.include? conflictivo}
+  end
+
+  def metodos_ignorados
+    @trait.metodos.select {|metodo| @selectores_ignorados.include? metodo.name}
   end
 end
 

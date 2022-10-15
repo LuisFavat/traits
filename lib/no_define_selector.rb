@@ -1,0 +1,2 @@
+class NoDefineSelector < StandardError
+end

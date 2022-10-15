@@ -1,4 +1,5 @@
 require 'trait_con_conflicto_error'
+require 'no_define_selector'
 
 class TraitAbstracto
 
@@ -14,8 +15,9 @@ class TraitAbstracto
     TraitCompuesto.new(self, un_trait)
   end
 
-  def -(un_symbol_method)
-    TraitDisminuido.new(self, *un_symbol_method)
+  def -(selector)
+    raise NoDefineSelector unless define? selector
+    TraitDisminuido.new(self, *selector)
   end
 
   def <<(selector_alias)
@@ -30,7 +32,8 @@ class TraitAbstracto
   end
 
   def define?(selector)
-    selectores_disponibles.include? selector
+    selectores_a_verificar = [selector].flatten
+    selectores_a_verificar.all? {|selector_a_verificar| selectores_disponibles.include? selector_a_verificar}
   end
 
   def selectores_disponibles
@@ -42,6 +45,10 @@ class TraitAbstracto
   end
 
   def selectores_requeridos
+    raise NotImplementedError
+  end
+
+  def tiene_requeridos?
     raise NotImplementedError
   end
 
