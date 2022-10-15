@@ -1,72 +1,73 @@
-require 'trait_abstracto'
-require 'trait_disminuido'
-require 'trait_compuesto'
-require 'interfaz_de_usuario'
-require 'trait_alias'
+class Trait
 
+  def aplicarse_en(una_clase)
+    comprobar_conflictos
 
-class Trait < TraitAbstracto
-
-  # metodos de clase
-  def self.debe(&bloque_de_metodos)
-    modulo_plus = requerimientos_en_modulos
-    hash_de_metodos = extraer_metodos(modulo_plus, &bloque_de_metodos)
-    Trait.new(hash_de_metodos, modulo_plus.selectores_requeridos)
-  end
-
-  def self.requerimientos_en_modulos()
-    Module.new {
-      @selectores_requeridos = []
-
-      def self.requiere(*un_selector)
-        @selectores_requeridos << un_selector
-        @selectores_requeridos.flatten!
-      end
-
-      def self.selectores_requeridos
-        @selectores_requeridos
-      end
-    }
-  end
-
-  def self.extraer_metodos(modulo_con_metodos, &bloque_de_metodos)
-    modulo_con_metodos.class_exec(&bloque_de_metodos)
-
-    hash_de_metodos = {}
-    modulo_con_metodos.instance_methods(false).each do |selector|
-      hash_de_metodos[selector] = modulo_con_metodos.instance_method(selector)
+    selectores_sin_conflicto(una_clase).each do |selector|
+      ms = metodos_para(selector)
+      una_clase.define_method(selector, ms.first)
     end
-    hash_de_metodos
   end
-  
-  # metodos de instancia
-  def initialize(unos_metodos, unos_selectores_requeridos = [])
-    super()
-    @hash_de_metodos = unos_metodos
-    @selectores_requeridos = unos_selectores_requeridos
+
+  def +(un_trait)
+    TraitCompuesto.new(self, un_trait)
+  end
+
+  def -(un_selector)
+
+    selectores = [un_selector].flatten
+    selectores.each do |selector|
+      unless selectores_disponibles.include?(selector)
+        raise TraitDisminuido.mensaje_de_error_en_resta
+      end
+    end
+
+    TraitDisminuido.new(self, selectores)
+  end
+
+  def <<(hash_de_alias)
+    unos_alias = hash_de_alias.values
+    if selectores_requeridos.any?{|requerido| unos_alias.include?requerido}
+      raise "El alias no puede ser igual a un selector requerido"
+    end
+    if selectores_disponibles.any?{|requerido| unos_alias.include?requerido}
+      raise "El alias no puede ser igual a un selector disponible"
+    end
+
+    TraitAlias.new(self, hash_de_alias)
+  end
+
+  def ==(un_trait)
+    unless un_trait.class.superclass == Trait
+      return false
+    end
+    selectores_disponibles == un_trait.selectores_disponibles &&
+    selectores_requeridos == un_trait.selectores_requeridos &&
+    metodos == un_trait.metodos
   end
 
   def selectores_disponibles
-    @hash_de_metodos.keys.to_set
-  end
-
-  def selectores_ignorados
-    []
+    raise NotImplementedError
   end
 
   def selectores_requeridos
-    @selectores_requeridos.clone.to_set
+    raise NotImplementedError
   end
 
   def metodos
-    @hash_de_metodos.values.to_set
+    raise NotImplementedError
   end
 
-  def metodo(un_selector)
-    @hash_de_metodos[un_selector]
+  def metodos_para(un_selector)
+    raise NotImplementedError
   end
 
   def comprobar_conflictos
+    raise NotImplementedError
+  end
+
+  def selectores_sin_conflicto(una_clase)
+    selectores_disponibles - una_clase.instance_methods
   end
 
 end

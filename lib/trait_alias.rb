@@ -1,4 +1,8 @@
-class TraitAlias < TraitAbstracto
+class TraitAlias < Trait
+
+  def comprobar_conflictos
+    @trait.comprobar_conflictos
+  end
 
   def initialize(un_trait, unos_alias)
     super()
@@ -10,10 +14,6 @@ class TraitAlias < TraitAbstracto
     @trait.selectores_disponibles + todos_los_alias
   end
 
-  def selectores_ignorados
-    @trait.selectores_ignorados
-  end
-
   def selectores_requeridos
     @trait.selectores_requeridos
   end
@@ -21,14 +21,13 @@ class TraitAlias < TraitAbstracto
   def metodos
     @trait.metodos
   end
-
-  def metodo(un_alias)
-    if @alias_selectores.keys.include?(un_alias)
-      selector = alias_a_selector(un_alias)
+  def metodos_para(un_selector)
+    if @alias_selectores.keys.include?(un_selector)
+      selector = alias_a_selector(un_selector)
     else
-      selector = un_alias
+      selector = un_selector
     end
-    @trait.metodo(selector)
+    @trait.metodos_para(selector)
   end
 
   def alias_a_selector(un_alias)

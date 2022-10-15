@@ -1,4 +1,4 @@
-class TraitDisminuido < TraitAbstracto
+class TraitDisminuido < Trait
 
   def initialize(un_trait, selectores_ignorados)
     super()
@@ -7,11 +7,11 @@ class TraitDisminuido < TraitAbstracto
   end
 
   def selectores_disponibles
-    @trait.selectores_disponibles - selectores_ignorados
+    @trait.selectores_disponibles - @selectores_ignorados
   end
 
-  def selectores_ignorados
-    @trait.selectores_ignorados + @selectores_ignorados
+  def comprobar_conflictos
+    @trait.comprobar_conflictos
   end
 
   def selectores_requeridos
@@ -24,11 +24,9 @@ class TraitDisminuido < TraitAbstracto
     @trait.metodos
   end
 
-  def metodo(un_selector)
-    @trait.metodo(un_selector)
+  def metodos_para(un_selector)
+    @trait.metodos_para(un_selector)
   end
-
-
 
   # Metodos de clase
   def self.mensaje_de_error_en_resta

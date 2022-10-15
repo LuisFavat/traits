@@ -1,5 +1,5 @@
 def trait(nombre, &bloque_de_definiciones)
-  Object.const_set(nombre, Trait.debe(&bloque_de_definiciones))
+  Object.const_set(nombre, TraitSimple.debe(&bloque_de_definiciones))
 end
 
 def uses(trait)
