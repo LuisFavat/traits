@@ -9,7 +9,7 @@ require_relative '../lib/interfaz_de_usuario'
 describe 'trait' do
   describe 'Aplicacion de traits' do
     it 'Se aplica un trait a una clase y sus intancias responden a los selectores definidos por el trait' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         def m1
           'm1 de trait'
         end
@@ -24,7 +24,7 @@ describe 'trait' do
     end
 
     it 'Se aplica un trait a una clase con un selector en comun y prevalece el comportamiento definido en la clase' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         def m1
           'm1 de trait'
         end
@@ -43,7 +43,7 @@ describe 'trait' do
     end
 
     it 'Se aplica un trait a una clase con un selector definido en su jerarquia y prevalece el comportamiento de este ultimo' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         def m1
           'm1 de trait'
         end
@@ -69,13 +69,13 @@ describe 'trait' do
     end
 
     it 'No se puede aplicar un trait del resultado de combinar dos traits con un selector en comun' do
-      trait_1 =  Trait.definir_comportamiento do
+      trait_1 =  TraitSimple.definir_comportamiento do
         def m1
           "metodo m1"
         end
       end
 
-      trait_2 = Trait.definir_comportamiento do
+      trait_2 = TraitSimple.definir_comportamiento do
         def m1
           "otro metodo m1"
         end
@@ -91,13 +91,13 @@ describe 'trait' do
 
   describe 'Conflictos' do
     it 'Combinar dos traits que tienen un selector en comun genera un conflicto' do
-      trait_1 =  Trait.definir_comportamiento do
+      trait_1 =  TraitSimple.definir_comportamiento do
         def m1
           "metodo m1"
         end
       end
 
-      trait_2 = Trait.definir_comportamiento do
+      trait_2 = TraitSimple.definir_comportamiento do
         def m1
           "otro metodo m1"
         end
@@ -109,19 +109,19 @@ describe 'trait' do
     end
 
     it 'Al combinar un trait conflictivo con otro el resultante tiene conflicto' do
-      trait_1 =  Trait.definir_comportamiento do
+      trait_1 =  TraitSimple.definir_comportamiento do
         def m1
           "metodo m1"
         end
       end
 
-      trait_2 = Trait.definir_comportamiento do
+      trait_2 = TraitSimple.definir_comportamiento do
         def m1
           "otro metodo m1"
         end
       end
 
-      trait_3 = Trait.definir_comportamiento do
+      trait_3 = TraitSimple.definir_comportamiento do
         def m2
           "metodo m2"
         end
@@ -135,13 +135,13 @@ describe 'trait' do
     end
 
     it 'A un trait conflictivo se le resta el selector del conflicto y se resuelve' do
-      trait_1 =  Trait.definir_comportamiento do
+      trait_1 =  TraitSimple.definir_comportamiento do
         def m1
           "metodo m1"
         end
       end
 
-      trait_2 = Trait.definir_comportamiento do
+      trait_2 = TraitSimple.definir_comportamiento do
         def m1
           "otro metodo m1"
         end
@@ -153,13 +153,13 @@ describe 'trait' do
     end
 
     it 'Dar un alias a un selector conflictivo no resuelve el conflicto' do
-      trait_1 =  Trait.definir_comportamiento do
+      trait_1 =  TraitSimple.definir_comportamiento do
         def m1
           "metodo m1"
         end
       end
 
-      trait_2 = Trait.definir_comportamiento do
+      trait_2 = TraitSimple.definir_comportamiento do
         def m1
           "otro metodo m1"
         end
@@ -174,7 +174,7 @@ describe 'trait' do
 
   describe 'Algebra' do
     it 'Los traits saben diferenciarse de aquello que no son traits' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         def m1
           "m1"
         end
@@ -186,7 +186,7 @@ describe 'trait' do
     end
 
     it 'Dos traits con los mismos selectores no son iguales si estan asociados a metodos distintos' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         def m1
           "m1"
         end
@@ -196,7 +196,7 @@ describe 'trait' do
         end
       end
 
-      otro_trait = Trait.definir_comportamiento do
+      otro_trait = TraitSimple.definir_comportamiento do
         def m2
           "m2"
         end
@@ -213,7 +213,7 @@ describe 'trait' do
     #TODO: tener en cuenta este caso porque demuestra la potencia del modelo alcanzado
 =begin
     it 'Dos traits con los mismos metodos y selectores pero distintos requeridos son distintos' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         requiere :m3
         def m1
           self.m3
@@ -224,7 +224,7 @@ describe 'trait' do
         end
       end
 
-      otro_trait = Trait.definir_comportamiento do
+      otro_trait = TraitSimple.definir_comportamiento do
         def m3
           "m3"
         end
@@ -240,7 +240,7 @@ describe 'trait' do
 =end
 
     it 'No se puede restar un selector a un trait si no lo define' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         def m1
           'hola trait'
         end
@@ -250,7 +250,7 @@ describe 'trait' do
     end
 
     it 'Se resta un selector a un trait y las instancias de la clase donde se aplica no responden al mismo' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         def m1
           'hola trait'
         end
@@ -272,7 +272,7 @@ describe 'trait' do
 
     it 'Se resta un selector al resultado de restar otro a un trait y las instancias de la clase donde se aplica no
         responden a los mismos' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         def m1
           'm1 de trait'
         end
@@ -299,7 +299,7 @@ describe 'trait' do
 
     it 'Se restan un conjunto de selectores a un trait y las instancias de la clase donde se aplica no responden a los
         mismos' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         def m1
           'm1 de trait'
         end
@@ -325,19 +325,19 @@ describe 'trait' do
     end
 
     it 'Se componen varios traits, se aplican a una clase y sus instancias entienden los mensajes definidos por estos' do
-     trait_1 = Trait.definir_comportamiento do
+     trait_1 = TraitSimple.definir_comportamiento do
        def m1
          'm1'
        end
      end
 
-     trait_2 = Trait.definir_comportamiento do
+     trait_2 = TraitSimple.definir_comportamiento do
        def m2
          'm2'
        end
      end
 
-     trait_3 = Trait.definir_comportamiento do
+     trait_3 = TraitSimple.definir_comportamiento do
        def m3
          'm3'
        end
@@ -356,19 +356,19 @@ describe 'trait' do
    end
 
     it 'La combinacion de traits es asociativa, conmutativa e idempotente' do
-      trait_1 = Trait.definir_comportamiento do
+      trait_1 = TraitSimple.definir_comportamiento do
         def m1
           'm1'
         end
       end
 
-      trait_2 = Trait.definir_comportamiento do
+      trait_2 = TraitSimple.definir_comportamiento do
         def m2
           'm2'
         end
       end
 
-      trait_3 = Trait.definir_comportamiento do
+      trait_3 = TraitSimple.definir_comportamiento do
         def m2
           'otro m2'
         end
@@ -387,7 +387,7 @@ describe 'trait' do
 
   describe 'Requeridos' do
     it 'Un trait puede no tener metodos requeridos' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         def m1
           "metodo m1"
         end
@@ -398,7 +398,7 @@ describe 'trait' do
 
     it 'Al aplicarse un trait con requeridos no satisfechos y llamar al selector de una instancia de la clase que lo
         aplica falla' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         requiere :m2
         def m1
           self.m2
@@ -415,7 +415,7 @@ describe 'trait' do
     end
 
     it 'Eliminar un selector no genera cambios respecto a los requeridos de un trait' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         requiere :m2
         def m1
           self.m2
@@ -438,7 +438,7 @@ describe 'trait' do
     end
 
     it 'Combinar dos traits con requeridos hace que el resultante conserve los requeridos de ambos' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         requiere :m2
         def m1
           self.m2
@@ -449,7 +449,7 @@ describe 'trait' do
         end
       end
 
-      otro_trait = Trait.definir_comportamiento do
+      otro_trait = TraitSimple.definir_comportamiento do
         requiere :m4
         def m5
           self.m4
@@ -462,7 +462,7 @@ describe 'trait' do
     end
 
     it 'Al combinarse un trait con requeridos con otro que define el selector el trait resultante no conserva el requerimiento' do
-      trait_1 = Trait.definir_comportamiento do
+      trait_1 = TraitSimple.definir_comportamiento do
         requiere :m2
 
         def m1
@@ -470,7 +470,7 @@ describe 'trait' do
         end
       end
 
-      trait_2 = Trait.definir_comportamiento do
+      trait_2 = TraitSimple.definir_comportamiento do
         def m2
           'm2'
         end
@@ -487,14 +487,14 @@ describe 'trait' do
     end
 
     it 'Al combinarse un trait con requeridos y otro que no los satisface el resultante los conserva' do
-      trait_1 = Trait.definir_comportamiento do
+      trait_1 = TraitSimple.definir_comportamiento do
         requiere :m2
         def m1
           self.m2
         end
       end
 
-      trait_2 = Trait.definir_comportamiento do
+      trait_2 = TraitSimple.definir_comportamiento do
         def m3
           'm3'
         end
@@ -511,7 +511,7 @@ describe 'trait' do
     end
 
     it 'Definir un alias con un selector requerido satisface el requerimiento' do
-      trait_1 = Trait.definir_comportamiento do
+      trait_1 = TraitSimple.definir_comportamiento do
         requiere :m2
         def m1
           self.m2
@@ -537,7 +537,7 @@ describe 'trait' do
   describe 'Alias de mensajes' do
 
     it 'Dar un alias a un selector de un trait cambia los selectores disponibles pero no los metodos definidos' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         def mensaje
           'este es mensaje'
         end
@@ -550,7 +550,7 @@ describe 'trait' do
     end
 
     it 'Se define un alias para un selector de un trait y se conservan ambos asociados al mismo metodo' do
-      un_trait = Trait.definir_comportamiento do
+      un_trait = TraitSimple.definir_comportamiento do
         def mensaje
           'este es mensaje'
         end
@@ -572,7 +572,7 @@ describe 'trait' do
 
     it 'Se define un alias para un trait, se resta el selector original la instancia de la clase donde se aplica solo
         entiende el alias' do
-      trait_1 = Trait.definir_comportamiento do
+      trait_1 = TraitSimple.definir_comportamiento do
         def m1
           "metodo m1"
         end
@@ -590,13 +590,13 @@ describe 'trait' do
 
     it 'A traits con conflicto, se les define un alias y se resta el selector conflictivo a ambos,
         la instancia sabe respoder solo a los alias' do
-      trait_1 = Trait.definir_comportamiento do
+      trait_1 = TraitSimple.definir_comportamiento do
         def m1
           "metodo m1"
         end
       end
 
-      trait_2 = Trait.definir_comportamiento do
+      trait_2 = TraitSimple.definir_comportamiento do
         def m1
           "otro metodo m1"
         end
@@ -615,13 +615,13 @@ describe 'trait' do
 
     it 'Se combinan dos traits con el mismo selector a los que se le dio un alias, al resultado se le quita el conflictivo
         resolviendose el conflicto' do
-      trait_1 = Trait.definir_comportamiento do
+      trait_1 = TraitSimple.definir_comportamiento do
         def m1
           "metodo m1"
         end
       end
 
-      trait_2 = Trait.definir_comportamiento do
+      trait_2 = TraitSimple.definir_comportamiento do
         def m1
           "otro metodo m1"
         end

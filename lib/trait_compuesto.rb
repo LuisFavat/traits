@@ -1,4 +1,4 @@
-class TraitCompuesto < TraitAbstracto
+class TraitCompuesto < Trait
 
   def initialize(un_trait_a, un_trait_b)
     super()

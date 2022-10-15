@@ -1,4 +1,4 @@
-class TraitAlias < TraitAbstracto
+class TraitAlias < Trait
 
   def initialize(trait, selector_alias)
     super()

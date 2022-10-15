@@ -1,4 +1,4 @@
-class TraitDisminuido < TraitAbstracto
+class TraitDisminuido < Trait
 
   def initialize(un_trait, *selectores_a_ignorar)
     super()
