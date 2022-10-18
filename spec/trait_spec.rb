@@ -5,7 +5,7 @@ describe 'trait' do
   describe 'aplicacion de traits' do
     it 'Se aplica un trait a una clase y sus instancias responden a los metodos definidos por el trait' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           'hola trait'
         end
@@ -24,7 +24,7 @@ describe 'trait' do
     it 'Se aplica un trait a una clase con un selector en conflicto y
         prevalece el comportamiento definido de la clase' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           'metodo m1'
         end
@@ -48,7 +48,7 @@ describe 'trait' do
     it 'Se aplica un trait a una clase con un selector en conflicto definido en su jerarquia
         y prevalece el comportamiento de este ultimo' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           'metodo m1'
         end
@@ -72,12 +72,12 @@ describe 'trait' do
 
     it 'No se puede aplicar traits con selectores en conflicto' do
       # Preparacion
-      trait_1 =  TraitSimple.debe do
+      trait_1 =  TraitSimple.crear_desde_bloque do
         def m1
           "metodo m1"
         end
       end
-      trait_2 = TraitSimple.debe do
+      trait_2 = TraitSimple.crear_desde_bloque do
         def m1
           "otro metodo m1"
         end
@@ -94,7 +94,7 @@ describe 'trait' do
 
     it 'Se puede aplicar traits con selectores conflictivos, si son el mismo trait' do
       # Preparacion
-      trait_1 =  TraitSimple.debe do
+      trait_1 =  TraitSimple.crear_desde_bloque do
         def m1
           "metodo m1"
         end
@@ -112,7 +112,7 @@ describe 'trait' do
 
     it 'Se puede aplicar traits  conflictivos si son el mismo trait' do
       # Preparacion
-      trait_1 = TraitSimple.debe do
+      trait_1 = TraitSimple.crear_desde_bloque do
 
         def m1
           "metodo m1"
@@ -132,7 +132,7 @@ describe 'trait' do
 
     it 'Se puede aplicar traits con selectores conflictivos si los metodos son los mismos' do
       # Preparacion
-      trait_1 = TraitSimple.debe do
+      trait_1 = TraitSimple.crear_desde_bloque do
         def m1
           "metodo m1"
         end
@@ -155,7 +155,7 @@ describe 'trait' do
 
     it 'Se resta un selector a un trait y las *instancias no responden al mismo' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           'metodo m1'
         end
@@ -174,7 +174,7 @@ describe 'trait' do
 
     it 'No se puede restar un selector que no contiene el trait' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
       end
 
       # Ejercitacion # Verificacion
@@ -184,7 +184,7 @@ describe 'trait' do
     end
 
     it 'Los metodos asociados a un trait se consevan a pesar de la operacion que se le efectua' do
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           "m1"
         end
@@ -202,7 +202,7 @@ describe 'trait' do
 
     it 'Se resta un selector a un trait que define varios metodos  y las instancias responden a los selectores definidos' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           'hola trait'
         end
@@ -226,7 +226,7 @@ describe 'trait' do
 
     it 'Se restan varios selectores al trait, la instancia solo responde a los metodos definidos' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           'hola trait'
         end
@@ -255,7 +255,7 @@ describe 'trait' do
 
     it 'Se restan un conjunto de mensajes a un trait y la instancia solo responde a los metodos definidos ' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           'hola trait'
         end
@@ -284,19 +284,19 @@ describe 'trait' do
 
     it 'Se aplica un trait que es la composicion de varios traits, la instancia sabe responder con todos los metodos definidos por el trait' do
       # Preparacion
-     trait_1 = TraitSimple.debe do
+     trait_1 = TraitSimple.crear_desde_bloque do
        def m1
          'm1'
        end
      end
 
-     trait_2 = TraitSimple.debe do
+     trait_2 = TraitSimple.crear_desde_bloque do
        def m2
          'm2'
        end
      end
 
-     trait_3 = TraitSimple.debe do
+     trait_3 = TraitSimple.crear_desde_bloque do
        def m3
          'm3'
        end
@@ -316,13 +316,13 @@ describe 'trait' do
 
     it 'Se comprueba conflictos al aplicarse un trait complejo' do
       # Preparacion
-      trait_1 = TraitSimple.debe do
+      trait_1 = TraitSimple.crear_desde_bloque do
         def m1
           'm1'
         end
       end
 
-      trait_2 = TraitSimple.debe do
+      trait_2 = TraitSimple.crear_desde_bloque do
         def m1
           'm1'
         end
@@ -343,19 +343,19 @@ describe 'trait' do
 
     it 'La combinacion de traits es asociativa, conmutable e idempotente' do
       # Preparacion
-      trait_1 = TraitSimple.debe do
+      trait_1 = TraitSimple.crear_desde_bloque do
         def m1
           'm1'
         end
       end
 
-      trait_2 = TraitSimple.debe do
+      trait_2 = TraitSimple.crear_desde_bloque do
         def m2
           'm2'
         end
       end
 
-      trait_3 = TraitSimple.debe do
+      trait_3 = TraitSimple.crear_desde_bloque do
         def m2
           'otro m2'
         end
@@ -381,7 +381,7 @@ describe 'trait' do
 
     it 'Al restar un selector a un trait, ya no es igual al trait original' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           "metodo m1"
         end
@@ -396,7 +396,7 @@ describe 'trait' do
 
     it 'Al generar un alias para un trait, el trait resultante ya no es igual al trait original' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           "metodo m1"
         end
@@ -409,7 +409,7 @@ describe 'trait' do
       expect(un_trait == trait_alias).to eq(false)
     end
     it 'Un trait y otro objeto distinto a un trait no son iguales' do
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
       end
       objeto = Class.new.new
 
@@ -422,7 +422,7 @@ describe 'trait' do
 
     it 'Al definirse un trait con requerimientos, el trait sabe que requerimientos son' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         requiere :m2
         def m1
           self.m2
@@ -436,7 +436,7 @@ describe 'trait' do
     it 'Al aplicarse un trait con requerimientos no satisfechos la
         instancia no puede respoder al mensaje conflictivo' do
     # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         requiere :m2
         def m1
           self.m2
@@ -455,7 +455,7 @@ describe 'trait' do
     it 'Al aplicarse un trait con requerimientos a una clase que satisface dichos requerimientos,
          la instancia responde ccrrectamente al metodo definido por el trait' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         requiere :m2
 
         def m1
@@ -480,7 +480,7 @@ describe 'trait' do
     it 'Al combinarse un trait con requerimientos con otro trait que satisface el requerimiento,
          el trait resultante no conserva el requerimiento' do
       # Preparacion
-      trait_1 = TraitSimple.debe do
+      trait_1 = TraitSimple.crear_desde_bloque do
         requiere :m2
 
         def m1
@@ -488,7 +488,7 @@ describe 'trait' do
         end
       end
 
-      trait_2 = TraitSimple.debe do
+      trait_2 = TraitSimple.crear_desde_bloque do
         def m2
           'm2'
         end
@@ -509,14 +509,14 @@ describe 'trait' do
     it 'Al combinarse un trait con requerimientos no satisfechos
          el trait resultante  conserva los mismo requerimientos' do
       # Preparacion
-      trait_1 = TraitSimple.debe do
+      trait_1 = TraitSimple.crear_desde_bloque do
         requiere :m2
 
         def m1
           self.m2
         end
       end
-      trait_2 = TraitSimple.debe do
+      trait_2 = TraitSimple.crear_desde_bloque do
         def m3
           'm3'
         end
@@ -537,14 +537,14 @@ describe 'trait' do
     it 'Al combinarse varios trait con requerimientos no satisfechos,
          el trait resultante  conserva todos los requerimientos' do
       # Preparacion
-      trait_1 = TraitSimple.debe do
+      trait_1 = TraitSimple.crear_desde_bloque do
         requiere :m3
 
         def m1
           self.m3
         end
       end
-      trait_2 = TraitSimple.debe do
+      trait_2 = TraitSimple.crear_desde_bloque do
         requiere :m4
 
         def m2
@@ -559,8 +559,8 @@ describe 'trait' do
       expect(trait_combinado.selectores_requeridos == Set[:m3, :m4]).to eq( true )
     end
 
-    it 'Al borrar un metodo con requerimientos, se pierden los requerimientos' do
-      un_trait = TraitSimple.debe do
+    xit 'Al borrar un metodo con requerimientos, se pierden los requerimientos' do
+      un_trait = TraitSimple.crear_desde_bloque do
         requiere :m2
         def m1
           m2
@@ -578,7 +578,7 @@ describe 'trait' do
     it 'Se define un alias para un selector de un trait, al aplicarse el trait
         la instancia entiende el mensaje original y el alias' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           'metodo m1'
         end
@@ -598,7 +598,7 @@ describe 'trait' do
 
     it 'Caso trait con varios metodos. Se define un alias para un selector de un trait y se conservan ambos asociados al mismo metodo' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           'metodo m1'
         end
@@ -623,7 +623,7 @@ describe 'trait' do
     it 'Se define un alias para un trait, se resta el selector original
          la instancia solo entiende el alias' do
       # Preparacion
-      trait_1 = TraitSimple.debe do
+      trait_1 = TraitSimple.crear_desde_bloque do
         def m1
           "metodo m1"
         end
@@ -644,12 +644,12 @@ describe 'trait' do
     it 'A traits con conflicto, se les define un alias y se resta el selector conflictivo a ambos,
         la instancia sabe respoder solo a los alias' do
       # Preparacion
-      trait_1 = TraitSimple.debe do
+      trait_1 = TraitSimple.crear_desde_bloque do
         def m1
           "metodo m1"
         end
       end
-      trait_2 = TraitSimple.debe do
+      trait_2 = TraitSimple.crear_desde_bloque do
         def m1
           "otro metodo m1"
         end
@@ -670,7 +670,7 @@ describe 'trait' do
 
     it 'Al definir un alias a un trait con requerimientos, el alias no puede ser igual al de un requerimiento' do
       # Preparacion
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         requiere :m2
         def m1
           m2
@@ -682,7 +682,7 @@ describe 'trait' do
     end
 
     it 'Un trait no puede tener como alias un selector en uso' do
-      un_trait = TraitSimple.debe do
+      un_trait = TraitSimple.crear_desde_bloque do
         def m1
           "m1"
         end
@@ -694,13 +694,13 @@ describe 'trait' do
   end
 
   xit do
-    un_trait = TraitSimple.debe do
+    un_trait = TraitSimple.crear_desde_bloque do
       def m1
         "m1"
       end
     end
 
-    otro_trait = TraitSimple.debe do
+    otro_trait = TraitSimple.crear_desde_bloque do
       def m1
         "m1"
       end
@@ -711,24 +711,26 @@ describe 'trait' do
     expect do
       ((un_trait + otro_trait) - :m1).aplicarse_en(una_clase)
     end.not_to raise_error
-  end
 
-  it 'asdf 123' do
-    un_trait = TraitSimple.debe do
-      def m1
-        "m1"
+    it 'asdf 123' do
+      un_trait = TraitSimple.crear_desde_bloque do
+        def m1
+          "m1"
+        end
+        def m2
+          "m1"
+        end
       end
-      def m2
-        "m1"
-      end
+
+      una_clase = Class.new
+
+      expect do
+        (un_trait << { m1: :m2}).aplicarse_en(una_clase)
+      end.to raise_error
     end
-
-    una_clase = Class.new
-
-    expect do
-      (un_trait << { m1: :m2}).aplicarse_en(una_clase)
-    end.to raise_error
   end
+
+
 
   describe 'Iterfaz de usuario' do
 

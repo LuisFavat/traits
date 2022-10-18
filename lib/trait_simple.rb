@@ -7,7 +7,7 @@ require 'trait_alias'
 class TraitSimple < Trait
 
   class << self
-    def debe(&bloque_de_metodos)
+    def crear_desde_bloque(&bloque_de_metodos)
       modulo_plus = requerimientos_en_modulos
       hash_de_metodos = extraer_metodos(modulo_plus, &bloque_de_metodos)
       TraitSimple.new(hash_de_metodos, modulo_plus.selectores_requeridos)
@@ -30,10 +30,12 @@ class TraitSimple < Trait
     def extraer_metodos(modulo_con_metodos, &bloque_de_metodos)
       modulo_con_metodos.class_exec(&bloque_de_metodos)
 
-     modulo_con_metodos.instance_methods(false).reduce({}) do |hash_de_metodos, selector|
-        hash_de_metodos.merge(selector => modulo_con_metodos.instance_method(selector))
-      end
+      modulo_con_metodos.instance_methods(false).map do |selector|
+        [selector, modulo_con_metodos.instance_method(selector)]
+      end.to_h
     end
+
+
   end
   
   def initialize(unos_metodos, unos_selectores_requeridos = [])
